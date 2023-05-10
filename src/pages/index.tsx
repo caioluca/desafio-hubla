@@ -1,10 +1,10 @@
-import { Layout, SideBar } from '@/components'
+import { Layout, Transaction, SidePanel } from '@/components'
 
 export default function Home() {
   return (
-    <>
-      <Layout />
-      <SideBar />
-    </>
+    <Layout>
+      <Transaction />
+      <SidePanel />
+    </Layout>
   )
 }
