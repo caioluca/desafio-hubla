@@ -1,7 +1,15 @@
 import { Dispatch } from 'react'
 
+export interface ITransaction {
+	type: '1' | '2' | '3' | '4'
+	date: Date
+	product: string
+	value: string
+	seller: string
+}
+
 export interface IInitialState {
-	counter: number
+	transactions: Array<ITransaction>
 }
 
 export interface IContext extends IInitialState {

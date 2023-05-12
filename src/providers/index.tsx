@@ -1,4 +1,5 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react'
+import Head from 'next/head'
 import { ContextProvider } from './Context'
 
 interface IProvidersProps {
@@ -7,8 +8,14 @@ interface IProvidersProps {
 
 export function Providers({ children }: IProvidersProps) {
 	return (
-		<ContextProvider>
-			{children}
-		</ContextProvider>
+		<>
+			<Head>
+				<link rel='icon' href='/favicon.ico' />
+				<title>Desafio Hubla</title>
+			</Head>
+			<ContextProvider>
+				{children}
+			</ContextProvider>
+		</>
 	)
 }

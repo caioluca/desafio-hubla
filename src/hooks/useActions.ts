@@ -5,16 +5,42 @@ export function useActions() {
 	const { dispatch } = useStore()	
 
 
-	function increment() {
-		dispatch({ type: TYPES.INCREMENT })
+	async function fetchTransactions() {
+		try {
+			const url = 'http://localhost:3000/api/transaction'
+			const reqInit = { method: 'GET' }
+
+			let response = await fetch(url, reqInit)
+			response = await response.json()
+
+			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: response })
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
-	function decrement() {
-		dispatch({ type: TYPES.DECREMENT })
+	async function uploadTransactionsFile(fileContent: string) {
+		try {
+			const url = 'http://localhost:3000/api/transaction'
+			const reqInit = {
+				method: 'POST', 
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(fileContent), 
+			}
+
+			let response = await fetch(url, reqInit)
+			response = await response.json()
+
+			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: response })
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return {
-		increment, 
-		decrement, 
+		fetchTransactions, 
+		uploadTransactionsFile, 
 	}
 }

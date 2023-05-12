@@ -1,4 +1,3 @@
 export const TYPES = {
-	INCREMENT: 'increment', 
-	DECREMENT: 'decrement', 
+	SET_TRANSACTIONS: 'set_transactions', 
 }
