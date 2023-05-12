@@ -39,7 +39,12 @@ export function useActions() {
 		}
 	}
 
+	function toggleIsMenuOpen() {
+		dispatch({ type: TYPES.TOOGLE_IS_MENU_OPEN })
+	}
+
 	return {
+		toggleIsMenuOpen, 
 		fetchTransactions, 
 		uploadTransactionsFile, 
 	}

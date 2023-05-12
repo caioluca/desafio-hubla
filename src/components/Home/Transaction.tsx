@@ -33,7 +33,8 @@ export function Transaction() {
 }
 
 const Container = styled.div`
-	width: 100%;
+	width: calc(100% - 250px);
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -41,6 +42,10 @@ const Container = styled.div`
 	padding: 19px 23px;
 	border-radius: 20px;
 	background-color: #1D1D41;
+
+	@media screen and (max-width: 768px) {
+		width: 100%
+	}
 `
 
 const Header = styled.div`
@@ -48,7 +53,13 @@ const Header = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
 	gap: 10px;
+
+	@media screen and (max-width: 530px) {
+		flex-direction: column;
+		align-items: start;
+	}
 `
 
 const Title = styled.span`
@@ -64,4 +75,9 @@ const Filters = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 10px;
+
+	@media screen and (max-width: 530px) {
+		width: 100%;
+		flex-direction: column;
+	}
 `

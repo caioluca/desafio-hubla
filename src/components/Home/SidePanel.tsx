@@ -26,6 +26,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 26px;
+
+	@media screen and (max-width: 768px) {
+		max-width: unset;
+	}
 `
 
 const Select = styled(CSelect).attrs<any>({

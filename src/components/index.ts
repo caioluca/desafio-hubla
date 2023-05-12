@@ -5,6 +5,7 @@ export { Select } from './Select'
 export { Button } from './Button'
 export { Logo } from './Logo'
 
+export { MobileSideBar } from './MobileSideBar'
 export { SideBar } from './SideBar'
 export { Menu } from './SideBar/Menu'
 export { Profile } from './SideBar/Profile'

@@ -3,7 +3,7 @@ import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'rea
 export type TIconsNames = (
 	'calendar' | 'down-arrow' | 'up-arrow' | 'income' | 'outcome' | 'logo' | 
 	'menu' | 'password' | 'role' | 'search' | 'upload' | 'user' | 'sort' | 
-	'close' | 'confirm'
+	'bold-close' | 'bold-confirm' | 'close' | 'dashboard'
 )
 
 export interface IIcon {

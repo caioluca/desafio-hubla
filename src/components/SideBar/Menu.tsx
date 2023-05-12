@@ -6,7 +6,7 @@ export function Menu() {
 	return (
 		<Container>
 			<Item>
-				<Icon name='menu' size={24} />
+				<Icon name='dashboard' size={24} />
 				<ItemText children='Dashboard' />
 			</Item>
 		</Container>

@@ -76,13 +76,18 @@ const Container = styled.div`
 const Form = styled.form`
   background-color: #1D1D41;
   border-radius: 20px;
-  padding: 80px;
+  padding: 80px 50px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 10px;
+
+  @media screen and (max-width: 530px) {
+    padding: 60px 20px;
+    margin: 0 15px;
+  }
 `
 const ButtonsContainer = styled.div`
   width: 100%;

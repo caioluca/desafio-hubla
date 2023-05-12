@@ -62,8 +62,8 @@ export function Upload() {
 
 				{file?.name && (
 					<ActionsContainer>
-						<Icon name='close' onClick={handleClose} />
-						<Icon name='confirm' onClick={handleConfirm} />
+						<Icon name='bold-close' onClick={handleClose} />
+						<Icon name='bold-confirm' onClick={handleConfirm} />
 					</ActionsContainer>
 				)}
 			</Content>
@@ -73,7 +73,7 @@ export function Upload() {
 
 const Container = styled.label.attrs({ htmlFor: 'upload' })`
 	width: 100%;
-	min-height: 250px;
+	height: 250px;
 	padding: 24px;
 	background-color: #1D1D41;
 	border-radius: 20px;
@@ -101,6 +101,7 @@ const Content: any = styled.div<{ file: IFileState }>`
 
 	border-radius: 20px;
 	border: 3px dashed #8C89B4;
+	padding: 30px;
 `
 
 const Label = styled.span`

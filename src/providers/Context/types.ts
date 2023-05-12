@@ -10,6 +10,7 @@ export interface ITransaction {
 
 export interface IInitialState {
 	transactions: Array<ITransaction>
+	isMenuOpen: boolean
 }
 
 export interface IContext extends IInitialState {

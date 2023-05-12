@@ -1,49 +1,75 @@
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useStore } from '@/hooks'
 import { ITransaction } from '@/providers/Context/types'
+
 import styled from 'styled-components'
+
+import { formatCurrency, formatDate } from '@/utils'
 
 interface IField {
 	name: 'type' | 'date' | 'product' | 'value' | 'seller'
 	label: 'Tipo' | 'Data' | 'Produto' | 'Valor' | 'Vendedor'
+	minWidth: number
 }
 
 const fields: Array<IField> = [
-	{ name: 'type', label: 'Tipo' }, 
-	{ name: 'date', label: 'Data' }, 
-	{ name: 'product', label: 'Produto' }, 
-	{ name: 'value', label: 'Valor' }, 
-	{ name: 'seller', label: 'Vendedor' }, 
+	{ name: 'type', label: 'Tipo', minWidth: 35 }, 
+	{ name: 'date', label: 'Data', minWidth: 130 }, 
+	{ name: 'product', label: 'Produto', minWidth: 250 }, 
+	{ name: 'value', label: 'Valor', minWidth: 95 }, 
+	{ name: 'seller', label: 'Vendedor', minWidth: 135 }, 
 ]
 
 export function Table() {
 	const { transactions } = useStore()
+	const [parsedTransactions, setParsedTransactions] = useState<any>([])
+
+	useEffect(() => {
+		if (!!transactions.length) {
+			const newTransaction = transactions.map((transaction) => {
+				return {
+					...transaction,
+					date: formatDate(transaction.date),
+					value: formatCurrency(transaction.value)
+				}
+			})
+
+			setParsedTransactions(newTransaction)
+		}
+	}, [transactions])
 
 	return (
 		<Container>
-			<Head>
-				<Row>
-					{fields?.map((field, index) => (
-						<Header key={index} children={field.label} />
-					))}
-				</Row>
-			</Head>
-			<Body>
-				{transactions.map((transaction: ITransaction, index: number) => (
-					<Row key={index}>
-						{fields?.map((field: IField, index: number) => (
-							<Data key={index}>
-								{transaction[field.name] as ReactNode}
-							</Data>
+			<StyledTable>
+				<Head>
+					<Row>
+						{fields?.map((field, index) => (
+							<Header key={index} children={field.label} style={{ minWidth: field.minWidth }} />
 						))}
 					</Row>
-				))}
-			</Body>
+				</Head>
+				<Body>
+					{parsedTransactions.map((transaction: ITransaction, index: number) => (
+						<Row key={index}>
+							{fields?.map((field: IField, index: number) => (
+								<Data key={index}>
+									{transaction[field.name] as ReactNode}
+								</Data>
+							))}
+						</Row>
+					))}
+				</Body>
+			</StyledTable>
 		</Container>
 	)
 }
 
-const Container = styled.table`
+const Container = styled.div`
+	width: 100%;
+	overflow: scroll;
+`
+
+const StyledTable = styled.table`
 	width: 100%;
 `
 
