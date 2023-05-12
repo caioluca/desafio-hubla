@@ -1,19 +1,20 @@
-import Image, { ImageProps } from 'next/image'
 import styled from 'styled-components'
 
-type TMode = 'income' | 'outcome'
+import { Icon } from '@/components'
+
+type TType = 'income' | 'outcome'
 
 interface ICardProps {
 	value: string
-	mode: TMode
+	type: TType
 }
 
-export function Card({ value, mode }: ICardProps) {
+export function Card({ value, type }: ICardProps) {
 	return (
 		<Container>
-			<Icon mode={mode} />
+			<Icon name={type} size={45} />
 			<Info>
-				<Label children={`Total ${mode}`} />
+				<Label children={`Total ${type}`} />
 				<Value children={`$${value}`} />
 			</Info>
 		</Container>
@@ -28,13 +29,6 @@ const Container = styled.div`
 	align-items: center;
 	gap: 23px;
 `
-
-const Icon: any = styled(Image).attrs((props: any) => ({
-	src: `/${props.mode}.svg`, 
-	alt: props.mode, 
-	width: 45, 
-	height: 45, 
-}))``
 
 const Info = styled.div`
 	display: flex;

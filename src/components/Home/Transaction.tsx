@@ -2,14 +2,28 @@ import styled from 'styled-components'
 
 import { Input, Select, Table } from '@/components'
 
+const options = [
+	{ label: 'Nenhum', name: 'none' }, 
+	{ label: 'Tipo', name: 'type' }, 
+	{ label: 'Data', name: 'date' }, 
+	{ label: 'Produto', name: 'produdct' }, 
+	{ label: 'Valor', name: 'value' }, 
+	{ label: 'Vendedor', name: 'seller' }, 
+]
+
 export function Transaction() {
 	return (
 		<Container>
 			<Header>
-				<Title children='Transaction'/>
+				<Title children='Transações'/>
 				<Filters>
-					<Input />
-					<Select />
+					<Input rightIcon={{ name: 'search' }} placeholder='Procurar por...' />
+					<Select
+						style={{ background: 'none', border: '1px solid #8C89B4' }}
+						leftIcon={{ name: 'sort' }} 
+						options={options} 
+						placeholder='Filtrar por...'
+					/>
 				</Filters>
 			</Header>
 
@@ -34,6 +48,7 @@ const Header = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 10px;
 `
 
 const Title = styled.span`

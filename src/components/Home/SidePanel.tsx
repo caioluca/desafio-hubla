@@ -1,14 +1,21 @@
 import styled from 'styled-components'
 
-import { Card, CardSelect, CardUpload } from '@/components'
+import { Card, Select as CSelect, Upload } from '@/components'
+import { ISelectProps } from '@/types'
+
+const options = [
+	{ label: 'Produtor', name: 'producer' },
+]
 
 export function SidePanel() {
 	return (
 		<Container>
-			<CardUpload />
-			<CardSelect />
-			<Card mode='income' value='632.000' />
-			<Card mode='outcome' value='632.000' />
+			<Upload />
+
+			<Select options={options} />
+			
+			<Card type='income' value='632.000' />
+			<Card type='outcome' value='632.000' />
 		</Container>
 	)
 }
@@ -19,4 +26,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 26px;
+`
+
+const Select = styled(CSelect).attrs<any>({
+	listStyle: {
+		top: 68, 
+		padding: '21px 24px', 
+		borderRadius: 20, 
+	}
+})<ISelectProps>`
+	background-color: #1D1D41;
+	padding: 21px 24px;
+	border-radius: 20px;
 `

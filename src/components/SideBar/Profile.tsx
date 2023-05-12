@@ -1,44 +1,35 @@
-import Image from 'next/image'
 import styled from 'styled-components'
+
+import { Select as CSelect } from '@/components'
+
+const options = [
+	{ label: 'Sair', name: 'logout' },
+]
 
 export function Profile() {
 	return (
-		<Container>
+		<Select options={options}>
 			<Info>
-				<Avatar />
-				<InfoText>
-					<Username children='Alia Riaz' />
-					<Role children='Web Developer' />
-				</InfoText>
+				<Username children='Caio Luca' />
+				<Role children='Produtor' />
 			</Info>
-			<DownArrow />
-		</Container>
+		</Select>
 	)
 }
 
-const Container = styled.div`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	cursor: pointer;
-`
-const Info = styled.div`
-	display: flex;
-	align-items: center;
-	gap: 12px;
-`
-
-const Avatar = styled(Image).attrs({
-	src: '/avatar.png',
-	alt: 'avatar',
-	width: 60,
-	height: 60,
+const Select = styled(CSelect).attrs<any>({
+	rightIcon: {
+		name: 'up-arrow'
+	}, 
+	listStyle: {
+		top: 'unset',
+		bottom: 65
+	}
 })`
-	background-color: #fff;
-	border-radius: 50%;
+	background: none;
 `
 
-const InfoText = styled.div`
+const Info = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 2px;
@@ -61,10 +52,3 @@ const Role = styled.span`
 	line-height: 19px;
 	color: #F0F0FB;
 `
-
-const DownArrow = styled(Image).attrs({
-	src: '/down-arrow.svg',
-	alt: 'down-arrow',
-	width: 12,
-	height: 7,
-})``

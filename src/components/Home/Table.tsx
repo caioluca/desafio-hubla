@@ -1,25 +1,41 @@
+import { ReactNode } from 'react'
+import { useStore } from '@/hooks'
+import { ITransaction } from '@/providers/Context/types'
 import styled from 'styled-components'
 
-const fields = [
-	'Tipo', 
-	'Data', 
-	'Produto', 
-	'Valor', 
-	'Vendedor', 
+interface IField {
+	name: 'type' | 'date' | 'product' | 'value' | 'seller'
+	label: 'Tipo' | 'Data' | 'Produto' | 'Valor' | 'Vendedor'
+}
+
+const fields: Array<IField> = [
+	{ name: 'type', label: 'Tipo' }, 
+	{ name: 'date', label: 'Data' }, 
+	{ name: 'product', label: 'Produto' }, 
+	{ name: 'value', label: 'Valor' }, 
+	{ name: 'seller', label: 'Vendedor' }, 
 ]
 
 export function Table() {
+	const { transactions } = useStore()
+
 	return (
 		<Container>
 			<Head>
 				<Row>
-					{fields?.map((field, index) => <Header key={index} children={field} />)}
+					{fields?.map((field, index) => (
+						<Header key={index} children={field.label} />
+					))}
 				</Row>
 			</Head>
 			<Body>
-				{[].map((row, index) => (
+				{transactions.map((transaction: ITransaction, index: number) => (
 					<Row key={index}>
-						{fields?.map((field, index) => <Data key={index} children={row[field]} />)}
+						{fields?.map((field: IField, index: number) => (
+							<Data key={index}>
+								{transaction[field.name] as ReactNode}
+							</Data>
+						))}
 					</Row>
 				))}
 			</Body>

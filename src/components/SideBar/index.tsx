@@ -6,7 +6,7 @@ export function SideBar() {
 	return (
 		<Container>
 			<UpperContent>
-				<Logo />
+				<Logo size='small' />
 
 				<Menu />
 			</UpperContent>
