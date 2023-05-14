@@ -15,3 +15,9 @@ model Transaction {
   value  String
   seller  String
 }
+model User {
+  id    Int     @id @default(autoincrement())
+  role  String @unique
+  username  String
+  password  String
+}
