@@ -1,11 +1,12 @@
 import { TYPES } from '@/providers/Context'
 import { useStore } from '@/hooks'
 import { IUserLogin, INewUser, IUserSession } from '@/types'
-import { request, validateForm } from '@/utils'
+import { validateForm } from '@/utils'
 import { useRouter } from 'next/router'
+import { IToast } from '@/types'
 
 export function useActions() {
-	const { dispatch } = useStore()	
+	const { dispatch, toasts } = useStore()	
 	const router = useRouter()
 
 	function toggleIsMenuOpen() {
@@ -16,11 +17,24 @@ export function useActions() {
 		dispatch({ type: TYPES.SET_USER, payload: user })
 	}
 
+	function setToasts(toasts: Array<IToast>) {
+		dispatch({ type: TYPES.SET_TOASTS, payload: toasts })
+	}
+
 	async function fetchTransactions() {
 		try {
-			const response = await request('/transaction', { method: 'GET' })
+			const url = 'http://localhost:3000/api/transaction'
+			const options = { method: 'GET' }
 
-			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: response.data })
+			const req = new Request(url, options)
+			const response = await fetch(req)
+			const data = await response.json()
+
+			if (response.status !== 200) {
+				throw new Error(data)
+			}
+
+			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: data })
 		} catch (error) {
 			throw error
 		}
@@ -28,6 +42,7 @@ export function useActions() {
 
 	async function uploadTransactionsFile(fileContent: string) {
 		try {
+			const url = 'http://localhost:3000/api/transaction'
 			const options = {
 				method: 'POST', 
 				headers: {
@@ -36,9 +51,17 @@ export function useActions() {
 				body: JSON.stringify(fileContent), 
 			}
 
-			const response = await request('/transaction', options)
+			const req = new Request(url, options)
+			const response = await fetch(req)
+			const data = await response.json()
 
-			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: response.data })
+			if (response.status !== 200) {
+				throw new Error(data)
+			}
+
+			dispatch({ type: TYPES.SET_TOASTS, payload: [...toasts, { type: 'success', content: 'Arquivo subiu com sucesso!' }] })
+
+			dispatch({ type: TYPES.SET_TRANSACTIONS, payload: data })
 		} catch (error) {
 			throw error
 		}
@@ -48,6 +71,7 @@ export function useActions() {
 		try {
 			validateForm(newUser, 'register')
 
+			const url = 'http://localhost:3000/api/user'
 			const options = {
 				method: 'POST', 
 				headers: {
@@ -56,7 +80,12 @@ export function useActions() {
 				body: JSON.stringify(newUser), 
 			}
 
-			const response = await request('/user', options)
+			const req = new Request(url, options)
+			const response = await fetch(req)
+			const data = await response.json()
+			
+			if (response.status !== 200) 
+				throw new Error(data)
 
 		} catch (error) {
 			throw error
@@ -67,6 +96,7 @@ export function useActions() {
 		try {
 			validateForm(user, 'login')
 
+			const url = 'http://localhost:3000/api/login'
 			const options = {
 				method: 'POST', 
 				headers: {
@@ -75,7 +105,12 @@ export function useActions() {
 				body: JSON.stringify(user), 
 			}
 
-			const response = await request('/login', options)			
+			const req = new Request(url, options)
+			const response = await fetch(req)
+			const data = await response.json()
+
+			if (response.status !== 200) 
+				throw new Error(data)
 
 			router.push('/home')
 		} catch (error) {
@@ -85,9 +120,15 @@ export function useActions() {
 
 	async function logout() {
 		try {
+			const url = 'http://localhost:3000/api/logout'
 			const options = { method: 'GET' }
 
-			const response = await request('/logout', options)
+			const req = new Request(url, options)
+			const response = await fetch(req)
+			const data = await response.json()
+			
+			if (response.status !== 200) 
+				throw new Error(data)
 
 			router.push('/')
 		} catch (error) {
@@ -96,6 +137,7 @@ export function useActions() {
 	}
 
 	return {
+		setToasts, 
 		logout, 
 		login, 
 		registerUser, 

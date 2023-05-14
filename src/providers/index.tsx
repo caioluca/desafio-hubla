@@ -15,13 +15,14 @@ export function Providers({ children }: IProvidersProps) {
 				<link rel='icon' href='/favicon.ico' />
 				<title>Desafio Hubla</title>
 			</Head>
-			<ToastProvider>
+			
+			<ContextProvider>
 				<FontsProvider>
-					<ContextProvider>
-					{children}
-				</ContextProvider>
+					<ToastProvider>
+						{children}
+					</ToastProvider>
 				</FontsProvider>
-			</ToastProvider>
+			</ContextProvider>
 		</>
 	)
 }

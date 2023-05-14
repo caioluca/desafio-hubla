@@ -81,17 +81,3 @@ export function validateForm(newUser: any, formType: string ) {
       throw new Error('O Campo "Confirmar Senha" deve ser igual ao campo "Senha"!')
   }
 }
-
-export async function request(endpoint: string, options: RequestInit) {
-  try {
-    const url = `http://localhost:3000/api${endpoint}`
-    const req = new Request(url, options)
-
-    const response = await fetch(req) || {}
-    const data = await response.json()
-
-    return { ...response, data }
-  } catch (error) {
-    throw error
-  }
-}

@@ -1,4 +1,4 @@
-import { IUserSession } from '@/types'
+import { IUserSession, IToast } from '@/types'
 import { Dispatch } from 'react'
 
 export interface ITransaction {
@@ -13,6 +13,7 @@ export interface IInitialState {
 	transactions: Array<ITransaction>
 	isMenuOpen: boolean
 	user: IUserSession
+	toasts: Array<IToast>
 }
 
 export interface IContext extends IInitialState {

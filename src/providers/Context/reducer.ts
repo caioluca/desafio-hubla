@@ -4,13 +4,17 @@ import { TYPES } from './actionTypes'
 export const initialState: IInitialState = {
 	transactions: [],
 	isMenuOpen: false,
-	user: { isLoggedIn: false, role: '', username: '' }
+	user: { isLoggedIn: false, role: '', username: '' }, 
+	toasts: []
 }
 
 export function reducer(state: IInitialState, action: IAction) {
 	const { type, payload } = action
 
 	switch (type) {
+		case TYPES.SET_TOASTS: 
+			return { ...state, toasts: payload }
+
 		case TYPES.TOOGLE_IS_MENU_OPEN: 
 			return { ...state, isMenuOpen: !state.isMenuOpen }
 

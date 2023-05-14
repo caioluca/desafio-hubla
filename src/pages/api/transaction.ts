@@ -13,12 +13,12 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
 		await prisma.$disconnect()
 
 		return res.status(200).json(transactions)
-	} catch (error: any) {
+	} catch (error) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).json({ message: error.message })
+		return res.status(500).json((error as Error).message)
 	}
 }
 
@@ -39,12 +39,12 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
 		await prisma.$disconnect()
 
 		return res.status(200).json(transactions)
-	} catch (error: any) {
+	} catch (error) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).json({ message: error.message })
+		return res.status(500).json((error as Error).message)
 	}
 }
 
@@ -54,11 +54,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			await postHandler(req, res)
 		else 
 			await getHandler(req, res)
-	} catch (error: any) {
+	} catch (error) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).json({ message: error.message })
+		return res.status(500).json((error as Error).message)
 	}
 }

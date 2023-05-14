@@ -1,5 +1,5 @@
 import { Layout, Transaction, SidePanel } from '@/components'
-import { useActions } from '@/hooks'
+import { useActions, useStore } from '@/hooks'
 import { useEffect } from 'react'
 import { withIronSessionSsr } from 'iron-session/next'
 import { sessionOptions } from '@/lib'
@@ -12,11 +12,20 @@ interface IHomeProps {
 }
 
 export default function Home({ user }: IHomeProps) {
-  const { fetchTransactions, setUser } = useActions()
+  const { fetchTransactions, setUser, setToasts } = useActions()
+  const { toasts } = useStore()
 
   useEffect(() => {
-    setUser(user)
-    fetchTransactions()
+    (async () => {
+      try {
+        setUser(user)
+        await fetchTransactions()
+      } catch (error) {
+        console.log(error)
+
+        setToasts([...toasts, { type: 'error', content: (error as Error).message }])
+      }
+    })()
   }, [user])
 
   return (

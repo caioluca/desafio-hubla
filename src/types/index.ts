@@ -3,7 +3,8 @@ import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'rea
 export type TIconsNames = (
 	'calendar' | 'down-arrow' | 'up-arrow' | 'income' | 'outcome' | 'logo' | 
 	'menu' | 'password' | 'role' | 'search' | 'upload' | 'user' | 'sort' | 
-	'bold-close' | 'bold-confirm' | 'close' | 'dashboard'
+	'bold-close' | 'bold-confirm' | 'close' | 'dashboard' | 'toast-warning' | 
+	'toast-error' | 'toast-success'
 )
 
 export interface IIcon {
@@ -45,4 +46,10 @@ export interface INewUser {
 export interface IUserLogin {
 	username: string
 	password: string
+}
+
+export type TType = 'success' | 'warning' | 'error'
+export interface IToast {
+	type: TType
+	content: string
 }

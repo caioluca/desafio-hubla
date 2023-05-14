@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { sessionOptions } from '@/lib'
 import { Logo, Input, Select, Button } from '@/components'
 import { IOption } from '@/types'
-import { useActions } from '@/hooks'
+import { useActions, useStore } from '@/hooks'
 
 const options = [
   { label: 'Administrador', name: 'admin' }, 
@@ -92,7 +92,8 @@ function Login({ formState, pageState }: any) {
 }
 
 export default function Index() {
-  const { registerUser, login } = useActions()
+  const { registerUser, login, setToasts } = useActions()
+  const { toasts } = useStore()
 
   const formState = useState<any>({})
   const [form, setForm] = formState
@@ -109,11 +110,16 @@ export default function Index() {
         await login(form)
       else {
         await registerUser(form)
+      
+        setToasts([...toasts, { type: 'success', content: 'Usuário adicionar com sucesso!' }])
+
         setForm({})
         setPage('login')
       }
     } catch (error) {
       console.log(error)
+
+      setToasts([...toasts, { type: 'error', content: (error as Error).message }])
     }
   }
 
