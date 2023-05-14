@@ -1,6 +1,8 @@
 import { ReactNode } from 'react'
 import Head from 'next/head'
 import { ContextProvider } from './Context'
+import { ToastProvider } from './Toast'
+import { FontsProvider } from './Fonts'
 
 interface IProvidersProps {
 	children: ReactNode
@@ -13,9 +15,13 @@ export function Providers({ children }: IProvidersProps) {
 				<link rel='icon' href='/favicon.ico' />
 				<title>Desafio Hubla</title>
 			</Head>
-			<ContextProvider>
-				{children}
-			</ContextProvider>
+			<ToastProvider>
+				<FontsProvider>
+					<ContextProvider>
+					{children}
+				</ContextProvider>
+				</FontsProvider>
+			</ToastProvider>
 		</>
 	)
 }
