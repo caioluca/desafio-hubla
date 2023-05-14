@@ -1,3 +1,4 @@
+import { IUserSession } from '@/types'
 import { Dispatch } from 'react'
 
 export interface ITransaction {
@@ -11,6 +12,7 @@ export interface ITransaction {
 export interface IInitialState {
 	transactions: Array<ITransaction>
 	isMenuOpen: boolean
+	user: IUserSession
 }
 
 export interface IContext extends IInitialState {

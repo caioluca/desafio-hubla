@@ -1,17 +1,31 @@
 import styled from 'styled-components'
 
 import { Select as CSelect } from '@/components'
+import { useActions, useStore } from '@/hooks'
+import { useRouter } from 'next/router'
 
 const options = [
 	{ label: 'Sair', name: 'logout' },
 ]
 
 export function Profile() {
+	const { logout } = useActions()
+	const router = useRouter()
+	const { user } = useStore()
+
+	async function handleChange() {
+		try {
+			await logout()
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	return (
-		<Select options={options}>
+		<Select options={options} onChange={handleChange}>
 			<Info>
-				<Username children='Caio Luca' />
-				<Role children='Produtor' />
+				<Username children={user?.username?.toUpperCase()} />
+				<Role children={user?.role} />
 			</Info>
 		</Select>
 	)

@@ -35,7 +35,7 @@ const Container = styled.div`
 	}
 	`
 
-const Content = styled.div<{ isMenuOpen: boolean }>`
+const Content = styled.div<any>`
 	width: calc(100% - 250px);
 	height: 100%;
 	

@@ -18,7 +18,7 @@ export interface IOption {
 	label: string
 }
 
-export interface ISelectProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'> {
   placeholder?: string
 	leftIcon?: IIcon
 	rightIcon?: IIcon
@@ -26,4 +26,23 @@ export interface ISelectProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivEl
   listStyle?: CSSProperties
   listItemStyle?: CSSProperties
 	children?: ReactNode
+	onChange?: (option: IOption) => any
+}
+
+export interface IUserSession {
+	role: string
+	username: string
+	isLoggedIn?: boolean
+}
+
+export interface INewUser {
+	role: string
+	username: string
+	password: string
+	confirmPassword: string
+}
+
+export interface IUserLogin {
+	username: string
+	password: string
 }

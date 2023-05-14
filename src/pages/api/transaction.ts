@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import { PrismaClient } from '@prisma/client'
-import { parser } from './utils'
+import { parser } from '@/utils'
+import { ITransaction } from '@/providers/Context/types'
 
 const prisma = new PrismaClient()
 
@@ -12,12 +13,12 @@ async function getHandler(req: NextApiRequest, res: NextApiResponse) {
 		await prisma.$disconnect()
 
 		return res.status(200).json(transactions)
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).send(error)
+		return res.status(500).json({ message: error.message })
 	}
 }
 
@@ -27,7 +28,7 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
 
 		const parsedFileContent = parser(body)
 
-		const promises = parsedFileContent.map(async (transaction: any) => {
+		const promises = parsedFileContent.map(async (transaction: ITransaction) => {
 			return await prisma.transaction.create({ data: transaction })
 		})
 
@@ -38,12 +39,12 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
 		await prisma.$disconnect()
 
 		return res.status(200).json(transactions)
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).send(error)
+		return res.status(500).json({ message: error.message })
 	}
 }
 
@@ -53,11 +54,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			await postHandler(req, res)
 		else 
 			await getHandler(req, res)
-	} catch (error) {
+	} catch (error: any) {
 		console.log(error)
 
 		await prisma.$disconnect()
 
-		return res.status(500).send(error)
+		return res.status(500).json({ message: error.message })
 	}
 }

@@ -27,7 +27,7 @@ export function SideBar() {
 	)
 }
 
-const Container = styled.div<{ isMenuOpen: boolean }>`
+const Container: any = styled.div<any>`
 	background-color: #1D1D41;
 	width: 250px;
 	border-radius: 0 20px 20px 0;

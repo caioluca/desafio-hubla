@@ -15,6 +15,7 @@ export function Select(props: ISelectProps) {
     listStyle, 
     listItemStyle, 
     children, 
+    onChange,
     ...rest
   } = props
 
@@ -24,6 +25,13 @@ export function Select(props: ISelectProps) {
 	function toggleIsListVisible() {
 		setIsListVisible(!isListVisible)
 	}
+
+  function handleItemClick(option: IOption) {
+    if (onChange)
+      onChange(option)
+      
+    setSelectedOption(option)
+  }
 
 	return (
 		<Container {...rest} onClick={toggleIsListVisible}>
@@ -43,7 +51,7 @@ export function Select(props: ISelectProps) {
 						<ListItem
 							key={index} 
               style={listItemStyle}
-							onClick={() => setSelectedOption(option)} 
+							onClick={() => handleItemClick(option)} 
 							children={option.label}
 						/>
 					))}

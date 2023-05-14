@@ -1,6 +1,28 @@
-export function convertCents(value: string) {
-	return parseFloat(value) / 100
+import { ITransaction } from '@/providers/Context/types'
+
+type TType = '1' | '2' | '3' | '4'
+
+export function parser(file: string): Array<ITransaction> {
+	const result = file.split(/\r?\n|\r|\n/g)
+
+	if (!result[result.length - 1])
+		result.pop()
+
+	const parsedResult = result.map((row: string) => {
+		const parsedRow = {
+			type: row.slice(0, 0 + 1) as TType, 
+			date: new Date(row.slice(1, 1 + 25)), 
+			product: row.slice(26, 26 + 30), 
+			value: row.slice(56, 56 + 10), 
+			seller: row.slice(66, 66 + 20), 
+		}
+
+		return parsedRow
+	})
+
+	return parsedResult
 }
+
 
 export function formatDate(inputDate: Date) {
   const date = new Date(inputDate)
@@ -33,4 +55,43 @@ export function formatCurrency(valueInCents: string) {
   const currencyString = value.toLocaleString('pt-BR', currencyOptions)
 
   return currencyString
+}
+
+export function validateForm(newUser: any, formType: string ) {
+  if (!newUser?.username)
+   throw new Error('O Campo "Usuário" é obrigatório!')
+
+  if (newUser?.username?.length < 3)
+    throw new Error('O Campo "Usuário" deve conter pelo menos 3 caracteres!')
+
+  if (!newUser?.password)
+   throw new Error('O Campo "Senha" é obrigatório!')
+
+  if (newUser?.password?.length < 8)
+    throw new Error('O Campo "Senha" deve conter pelo menos 8 caracteres!')
+
+  if (formType === 'signup') {
+    if (!newUser?.role)
+      throw new Error('O Campo "Função" é obrigatório!')
+
+    if (!newUser?.confirmPassword)
+      throw new Error('O Campo "Confirmar Senha" é obrigatório!')
+
+    if (newUser?.confirmPassword !== newUser?.password)
+      throw new Error('O Campo "Confirmar Senha" deve ser igual ao campo "Senha"!')
+  }
+}
+
+export async function request(endpoint: string, options: RequestInit) {
+  try {
+    const url = `http://localhost:3000/api${endpoint}`
+    const req = new Request(url, options)
+
+    const response = await fetch(req) || {}
+    const data = await response.json()
+
+    return { ...response, data }
+  } catch (error) {
+    throw error
+  }
 }
