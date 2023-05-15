@@ -15,21 +15,6 @@ export function SidePanel() {
 
 	const [commission, setCommission] = useState('')
 	const [profit, setProfit] = useState('')
-	const [isUserProducer, setIsUserProducer] = useState(false)
-	const [isSelectedOptionProducer, setIsSelectedOptionProducer] = useState(false)
-
-	useEffect(() => {
-		setIsUserProducer(producers?.includes(user?.username))
-	}, [user])
-
-	useEffect(() => {
-		if (!!selectedOption)
-			setIsSelectedOptionProducer(producers?.includes(selectedOption.name))
-	}, [selectedOption])
-
-	useEffect(() => {
-		setSelectedOption(!isUserProducer ? { label: translateRole(user?.role), name: 'Todos' } : { label: sellers[0], name: sellers[0] })
-	}, [user, sellers])
 
 	useEffect(() => {
 		const affiliates = new Set<string>()
@@ -47,8 +32,10 @@ export function SidePanel() {
 	}, [transactions])
 
 	useEffect(() => {
+		setSelectedOption({ label: user?.username, name: user.username })
+
 		setOptions([
-			user?.role === 'admin' ? {} : { label: 'Produtor', name: user.username },
+			user?.role === 'admin' ? {} : { label: user?.username, name: user.username },
 			...sellers?.map((seller: any) => ({ label: seller, name: seller }))
 		])
 	}, [sellers])
@@ -56,7 +43,7 @@ export function SidePanel() {
 	useEffect(() => {
 		if (transactions?.length) {
 			const result = handleOutcomeNCommission({ transactions, user, type: 'load' })
-			const { outcome = 0, commission = 0 } = result
+			const { outcome, commission } = result
 
 			setProfit(formatCurrency(user?.role === 'affiliate' ? commission : outcome - commission))
 			setCommission(formatCurrency(user?.role === 'affiliate' ? outcome - commission : commission))
@@ -66,12 +53,12 @@ export function SidePanel() {
 	function handleSelectChange(option: IOption) {
 		setSelectedOption(option)
 
-		if (transactions?.length) {
+		if (transactions?.length && !!selectedOption) {
 			const result = handleOutcomeNCommission({ transactions, option, producers, type: 'click' })
-			const { outcome = 0, commission = 0 } = result
-
-			setProfit(formatCurrency(option?.label !== 'Produtor' ? commission : outcome - commission))
-			setCommission(formatCurrency(option?.label !== 'Produtor' ? outcome - commission : commission))
+			const { outcome, commission } = result
+			
+			setCommission(formatCurrency(commission))
+			setProfit(formatCurrency(outcome - commission))
 		}
 	}
 
@@ -82,23 +69,23 @@ export function SidePanel() {
 					<Upload />
 					{!!transactions?.length && (
 						<Sellers 
+							placeholder={user?.role === 'admin' ? 'Todos' : user?.username}
 							options={options} 
 							onChange={handleSelectChange}
-							defaultValue={{ label: user?.role === 'producer' ? 'Produtor' : selectedOption?.name, name: selectedOption?.name }}
 						/>
 					)}
 				</>
 			)}
 			
-			{!!transactions?.length && (
+			{(!!transactions?.length) && (
 				<>
 					<Card
-						label={selectedOption?.label === 'Produtor' ? 'Comissão dos Afiliados' : 'Comissão do Produtor'} 
+						label='Comissão do(s) Afiliado(s)'
 						type='prejudice' 
 						value={commission}
 					/>
 					<Card 
-						label={user?.role === 'admin' ? 'Comissão Afiliado' : 'Saldo Final'} 
+						label='Comissão do(s) Produtore(s)'
 						type='profit' 
 						value={profit} 
 					/>

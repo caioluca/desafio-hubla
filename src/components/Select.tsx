@@ -23,9 +23,6 @@ export function Select(props: ISelectProps) {
 	const [isListVisible, setIsListVisible] = useState(false)
 	const [selectedOption, setSelectedOption] = useState<IOption>()
 
-  useEffect(() => {
-    setSelectedOption(defaultValue)
-  }, [defaultValue])
 
 	function toggleIsListVisible() {
 		setIsListVisible(!isListVisible)
@@ -45,7 +42,7 @@ export function Select(props: ISelectProps) {
 				<Label
 					name={selectedOption?.name}
 				>
-          {children ? children : `${selectedOption?.label || placeholder || 'Selecione'}`}
+          {children ? children : selectedOption?.label ? selectedOption?.label : placeholder ? placeholder : 'Selecione'}
         </Label>
 			</LeftContent>
 			{rightIcon ? <Icon {...rightIcon} /> : <Icon name='down-arrow' />}

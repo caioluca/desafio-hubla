@@ -76,19 +76,20 @@ function sumTransactionsValue(params: ISumTransactionsValueParams): number {
 }
 
 export function handleOutcomeNCommission(params: IHandleOutcomeNComissionParams): IHandleOutcomeNCommissionReturn {
-  const { transactions, isProducer, type, producers, option } = params
+  const { transactions, user, type, producers, option } = params
   let result = { outcome: 0, commission: 0 }
 
     if (type === 'load') {
       const outcome = sumTransactionsValue({ transactions, filter: ({ type }) => ['1', '2'].includes(type) })
-      const commission = sumTransactionsValue({ transactions, filter: ({ type }) => type === (!isProducer ? '4' : '3') })
+      const commission = sumTransactionsValue({ transactions, filter: ({ type }) => type === (user?.role !== 'producer' ? '4' : '3') })
 
       result = { outcome, commission }
     }
 
     if (type === 'click' && !!option) {
-      const outcome = transactions
-        ?.filter(({ seller, type, product }) => {
+      const outcome = sumTransactionsValue({ 
+        transactions, 
+        filter: ({ product, seller, type }) => {
           if (producers?.includes(option?.name)) {
             const producer: any = transactions.find(({ seller, type }) => seller === option?.name && type === '1') || {}
 
@@ -96,9 +97,8 @@ export function handleOutcomeNCommission(params: IHandleOutcomeNComissionParams)
           }
           else 
             return seller === option.name && type === '2'
-        })
-        ?.map(({ value }) => parseFloat(value as string))
-        ?.reduce((prev, curr) => prev + curr)
+        } 
+      })
 
       const commission = sumTransactionsValue({
         transactions, 
