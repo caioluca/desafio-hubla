@@ -2,22 +2,38 @@ import styled from 'styled-components'
 
 import { Select as CSelect } from '@/components'
 import { useActions, useStore } from '@/hooks'
-import { useRouter } from 'next/router'
 
 const options = [
 	{ label: 'Sair', name: 'logout' },
 ]
 
 export function Profile() {
-	const { logout } = useActions()
-	const router = useRouter()
+	const { logout, toggleIsMenuOpen } = useActions()
 	const { user } = useStore()
 
 	async function handleChange() {
 		try {
 			await logout()
+
+			toggleIsMenuOpen()
 		} catch (error) {
 			console.log(error)
+		}
+	}
+
+	function handleRole(role?: string) {
+		switch (role) {
+			case 'admin':
+				return 'Adiministrador'
+
+			case 'producer':
+				return 'Produtor'
+
+			case 'affiliate':
+				return 'Afiliado'
+		
+			default:
+				return ''
 		}
 	}
 
@@ -25,7 +41,7 @@ export function Profile() {
 		<Select options={options} onChange={handleChange}>
 			<Info>
 				<Username children={user?.username?.toUpperCase()} />
-				<Role children={user?.role} />
+				<Role children={handleRole(user?.role)} />
 			</Info>
 		</Select>
 	)

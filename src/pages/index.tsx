@@ -110,8 +110,6 @@ export default function Index() {
         await login(form)
       else {
         await registerUser(form)
-      
-        setToasts([...toasts, { type: 'success', content: 'Usuário adicionar com sucesso!' }])
 
         setForm({})
         setPage('login')

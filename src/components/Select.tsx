@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '@/components'
@@ -16,11 +16,16 @@ export function Select(props: ISelectProps) {
     listItemStyle, 
     children, 
     onChange,
+    defaultValue, 
     ...rest
   } = props
 
 	const [isListVisible, setIsListVisible] = useState(false)
 	const [selectedOption, setSelectedOption] = useState<IOption>()
+
+  useEffect(() => {
+    setSelectedOption(defaultValue)
+  }, [defaultValue])
 
 	function toggleIsListVisible() {
 		setIsListVisible(!isListVisible)
@@ -47,7 +52,7 @@ export function Select(props: ISelectProps) {
 
 			{isListVisible && (
 				<List style={listStyle}>
-					{options.map((option, index) => (
+					{options?.filter(({ label }) => !!label)?.map((option, index) => (
 						<ListItem
 							key={index} 
               style={listItemStyle}

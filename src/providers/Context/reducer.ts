@@ -5,13 +5,21 @@ export const initialState: IInitialState = {
 	transactions: [],
 	isMenuOpen: false,
 	user: { isLoggedIn: false, role: '', username: '' }, 
-	toasts: []
+	toasts: [],
+	transactionSearchTerm: '',
+	affiliates: []
 }
 
 export function reducer(state: IInitialState, action: IAction) {
 	const { type, payload } = action
 
 	switch (type) {
+		case TYPES.SET_AFFILIATES: 
+			return { ...state, affiliates: payload }
+
+		case TYPES.SET_TRANSACTION_SEARCH_TERM: 
+			return { ...state, transactionSearchTerm: payload }
+
 		case TYPES.SET_TOASTS: 
 			return { ...state, toasts: payload }
 

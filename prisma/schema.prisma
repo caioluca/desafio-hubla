@@ -17,7 +17,7 @@ model Transaction {
 }
 model User {
   id    Int     @id @default(autoincrement())
-  role  String @unique
-  username  String
+  role  String
+  username  String @unique
   password  String
 }

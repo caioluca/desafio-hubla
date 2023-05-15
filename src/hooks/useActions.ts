@@ -21,10 +21,26 @@ export function useActions() {
 		dispatch({ type: TYPES.SET_TOASTS, payload: toasts })
 	}
 
-	async function fetchTransactions() {
+	function setTransactionSearchTerm(searchTerm: string) {
+		dispatch({ type: TYPES.SET_TRANSACTION_SEARCH_TERM, payload: searchTerm })
+	}
+
+	function setAffiliates(affiliates: Array<string>) {
+		dispatch({ type: TYPES.SET_AFFILIATES, payload: affiliates })
+	}
+
+	async function fetchTransactions({ username, orderByField }: any) {
 		try {
-			const url = 'http://localhost:3000/api/transaction'
+			let url = 'http://localhost:3000/api/transaction'
 			const options = { method: 'GET' }
+
+			if (orderByField || username) {
+				const qsParams = new URLSearchParams({
+					...(orderByField ? { orderByField } : {}), 
+					...(username ? { username } : {}), 
+				})
+				url = url + '?' + qsParams
+			}
 
 			const req = new Request(url, options)
 			const response = await fetch(req)
@@ -87,6 +103,8 @@ export function useActions() {
 			if (response.status !== 200) 
 				throw new Error(data)
 
+			setToasts([...toasts, { type: 'success', content: 'Usuário adicionado com sucesso!' }])
+
 		} catch (error) {
 			throw error
 		}
@@ -137,6 +155,8 @@ export function useActions() {
 	}
 
 	return {
+		setAffiliates, 
+		setTransactionSearchTerm, 
 		setToasts, 
 		logout, 
 		login, 

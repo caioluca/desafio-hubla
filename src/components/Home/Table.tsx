@@ -1,10 +1,10 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { useStore } from '@/hooks'
-import { ITransaction } from '@/providers/Context/types'
-
 import styled from 'styled-components'
 
+import { useStore } from '@/hooks'
+import { Icon } from '@/components'
 import { formatCurrency, formatDate } from '@/utils'
+import { ITransaction } from '@/types'
 
 interface IField {
 	name: 'type' | 'date' | 'product' | 'value' | 'seller'
@@ -21,22 +21,31 @@ const fields: Array<IField> = [
 ]
 
 export function Table() {
-	const { transactions } = useStore()
+	const { user, transactions, transactionSearchTerm } = useStore()
 	const [parsedTransactions, setParsedTransactions] = useState<any>([])
 
 	useEffect(() => {
 		if (!!transactions.length) {
-			const newTransaction = transactions.map((transaction) => {
-				return {
-					...transaction,
-					date: formatDate(transaction.date),
-					value: formatCurrency(transaction.value)
-				}
-			})
+			const newTransaction = transactions
+				.map(({ date, value, ...rest }) => {
+					return { ...rest, date: formatDate(date), value: formatCurrency(value) }
+				})
+				.filter((transaction) => {
+					const { type, date, product, value, seller } = transaction
+
+					const condition = 
+						type.match(RegExp(transactionSearchTerm, 'ig')) || 
+						date.match(RegExp(transactionSearchTerm, 'ig')) || 
+						product.match(RegExp(transactionSearchTerm, 'ig')) || 
+						value.match(RegExp(transactionSearchTerm, 'ig')) || 
+						seller.match(RegExp(transactionSearchTerm, 'ig'))
+
+					return condition
+				})
 
 			setParsedTransactions(newTransaction)
 		}
-	}, [transactions])
+	}, [transactions, transactionSearchTerm])
 
 	return (
 		<Container>
@@ -60,6 +69,12 @@ export function Table() {
 					))}
 				</Body>
 			</StyledTable>
+			{!parsedTransactions?.length && (
+				<EmptyContainer>
+					<Icon name='empty' size={150} />
+					<EmptyLabel children='Não há nenhuma informação na tabela' />
+				</EmptyContainer>
+			)}
 		</Container>
 	)
 }
@@ -104,4 +119,23 @@ const Data = styled.td`
 	color: #FFFFFF;
 
 	padding-bottom: 25px;
+`
+
+const EmptyContainer = styled.div`
+	width: 100%;
+	padding: 30px;
+	padding-top: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+`
+
+const EmptyLabel = styled.span`
+	font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #8C89B4;
 `

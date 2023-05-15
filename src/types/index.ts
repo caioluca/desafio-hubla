@@ -1,10 +1,10 @@
 import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react'
 
 export type TIconsNames = (
-	'calendar' | 'down-arrow' | 'up-arrow' | 'income' | 'outcome' | 'logo' | 
+	'calendar' | 'down-arrow' | 'up-arrow' | 'profit' | 'prejudice' | 'logo' | 
 	'menu' | 'password' | 'role' | 'search' | 'upload' | 'user' | 'sort' | 
 	'bold-close' | 'bold-confirm' | 'close' | 'dashboard' | 'toast-warning' | 
-	'toast-error' | 'toast-success'
+	'toast-error' | 'toast-success' | 'empty'
 )
 
 export interface IIcon {
@@ -19,7 +19,7 @@ export interface IOption {
 	label: string
 }
 
-export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'> {
+export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange' | 'defaultValue'> {
   placeholder?: string
 	leftIcon?: IIcon
 	rightIcon?: IIcon
@@ -27,6 +27,7 @@ export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTML
   listStyle?: CSSProperties
   listItemStyle?: CSSProperties
 	children?: ReactNode
+	defaultValue?: IOption
 	onChange?: (option: IOption) => any
 }
 
@@ -52,4 +53,12 @@ export type TType = 'success' | 'warning' | 'error'
 export interface IToast {
 	type: TType
 	content: string
+}
+
+export interface ITransaction {
+	type: '1' | '2' | '3' | '4'
+	date: Date
+	product: string
+	value: string
+	seller: string
 }

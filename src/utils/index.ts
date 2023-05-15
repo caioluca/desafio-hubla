@@ -1,4 +1,4 @@
-import { ITransaction } from '@/providers/Context/types'
+import { ITransaction } from '@/types'
 
 type TType = '1' | '2' | '3' | '4'
 

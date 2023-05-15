@@ -1,19 +1,13 @@
-import { IUserSession, IToast } from '@/types'
 import { Dispatch } from 'react'
-
-export interface ITransaction {
-	type: '1' | '2' | '3' | '4'
-	date: Date
-	product: string
-	value: string
-	seller: string
-}
+import { IUserSession, IToast, ITransaction } from '@/types'
 
 export interface IInitialState {
 	transactions: Array<ITransaction>
 	isMenuOpen: boolean
 	user: IUserSession
 	toasts: Array<IToast>
+	transactionSearchTerm: string
+	affiliates: Array<string>
 }
 
 export interface IContext extends IInitialState {

@@ -19,7 +19,7 @@ export default function Home({ user }: IHomeProps) {
     (async () => {
       try {
         setUser(user)
-        await fetchTransactions()
+        await fetchTransactions({ username: user?.username })
       } catch (error) {
         console.log(error)
 

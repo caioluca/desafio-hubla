@@ -27,7 +27,7 @@ export function SideBar() {
 	)
 }
 
-const Container: any = styled.div<any>`
+const Container = styled.div<any>`
 	background-color: #1D1D41;
 	width: 250px;
 	border-radius: 0 20px 20px 0;
@@ -44,7 +44,7 @@ const Container: any = styled.div<any>`
 		z-index: 2;
 		display: ${({ isMenuOpen }) => !!isMenuOpen ? 'flex' : 'none'};
 	}
-`
+	`
 
 const LogoContainer = styled.div`
 	display: flex;

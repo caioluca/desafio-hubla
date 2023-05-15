@@ -2,13 +2,39 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { PrismaClient } from '@prisma/client'
 import { parser } from '@/utils'
-import { ITransaction } from '@/providers/Context/types'
+import { ITransaction } from '@/types'
 
 const prisma = new PrismaClient()
 
 async function getHandler(req: NextApiRequest, res: NextApiResponse) {
 	try {
-		const transactions = await prisma.transaction.findMany()
+		const { orderByField, username }: any = req?.query
+
+		let queryParam = {
+			...(!!orderByField ? { orderBy: { [(orderByField as string)]: 'asc' } } : {})
+		}
+
+		if (!!username) {
+			const user = await prisma.user.findFirst({ where: { username } })
+
+
+			if (user?.role === 'producer') {
+				const userTransaction: any = await prisma.transaction.findFirst({ where: { type: '1', seller: user?.username } })
+
+				queryParam = { 
+					...queryParam, 
+					...(!!userTransaction?.product ? { where: { product: userTransaction?.product } } : {})
+				}
+			}
+
+			if (user?.role === 'affiliate') 
+				queryParam = { 
+					...queryParam, 
+					...(!!username ? { where: { seller: username } } : {})
+				}
+		}
+
+		const transactions = await prisma.transaction.findMany(queryParam)
 
 		await prisma.$disconnect()
 

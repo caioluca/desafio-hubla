@@ -2,20 +2,21 @@ import styled from 'styled-components'
 
 import { Icon } from '@/components'
 
-type TType = 'income' | 'outcome'
+type TType = 'profit' | 'prejudice'
 
 interface ICardProps {
+	label: string
 	value: string
 	type: TType
 }
 
-export function Card({ value, type }: ICardProps) {
+export function Card({ label, value, type }: ICardProps) {
 	return (
 		<Container>
 			<Icon name={type} size={45} />
 			<Info>
-				<Label children={`Total ${type}`} />
-				<Value children={`$${value}`} />
+				<Label children={label} />
+				<Value children={value} />
 			</Info>
 		</Container>
 	)

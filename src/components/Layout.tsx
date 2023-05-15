@@ -33,7 +33,7 @@ const Container = styled.div`
 	@media screen and (max-width: 1024px) {
 		flex-direction: column;
 	}
-	`
+`
 
 const Content = styled.div<any>`
 	width: calc(100% - 250px);
