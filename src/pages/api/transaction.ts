@@ -55,7 +55,8 @@ async function postHandler(req: NextApiRequest, res: NextApiResponse) {
 		const parsedFileContent = parser(body)
 
 		const promises = parsedFileContent.map(async (transaction: ITransaction) => {
-			return await prisma.transaction.create({ data: transaction })
+			const { value, ...rest } = transaction
+			return await prisma.transaction.create({ data: { ...rest, value: value as string } })
 		})
 
 		await Promise.all(promises)
