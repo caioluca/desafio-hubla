@@ -80,24 +80,30 @@ export function SidePanel() {
 			{user?.role !== 'affiliate' && (
 				<>
 					<Upload />
-					<Sellers 
-						options={options} 
-						onChange={handleSelectChange}
-						defaultValue={{ label: user?.role === 'producer' ? 'Produtor' : selectedOption?.name, name: selectedOption?.name }}
-					/>
+					{!!transactions?.length && (
+						<Sellers 
+							options={options} 
+							onChange={handleSelectChange}
+							defaultValue={{ label: user?.role === 'producer' ? 'Produtor' : selectedOption?.name, name: selectedOption?.name }}
+						/>
+					)}
 				</>
 			)}
 			
-			<Card
-				label={selectedOption?.label === 'Produtor' ? 'Comissão dos Afiliados' : 'Comissão do Produtor'} 
-				type='prejudice' 
-				value={commission}
-			/>
-			<Card 
-				label={user?.role === 'admin' ? 'Comissão Afiliado' : 'Saldo Final'} 
-				type='profit' 
-				value={profit} 
-			/>
+			{!!transactions?.length && (
+				<>
+					<Card
+						label={selectedOption?.label === 'Produtor' ? 'Comissão dos Afiliados' : 'Comissão do Produtor'} 
+						type='prejudice' 
+						value={commission}
+					/>
+					<Card 
+						label={user?.role === 'admin' ? 'Comissão Afiliado' : 'Saldo Final'} 
+						type='profit' 
+						value={profit} 
+					/>
+				</>
+			)}
 		</Container>
 	)
 }
