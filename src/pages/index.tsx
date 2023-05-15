@@ -167,8 +167,6 @@ const ButtonsContainer = styled.div`
 `
 
 const SignupLabel = styled.span`
-  font-family: 'Inter';
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 19px;
@@ -179,8 +177,6 @@ const SignupButton = styled.button`
   border: none;
   background: none;
   outline: none;
-  font-family: 'Inter';
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 19px;

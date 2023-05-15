@@ -1,46 +1,35 @@
 import styled from 'styled-components'
 
-import { Card, Select as CSelect, Upload } from '@/components'
+import { Card, Select, Upload } from '@/components'
 import { IOption, ISelectProps } from '@/types'
-import { useActions, useStore } from '@/hooks'
-import { useDeferredValue, useEffect, useState } from 'react'
-import { formatCurrency } from '@/utils'
-
-function handleRole(role?: string) {
-	switch (role) {
-		case 'admin':
-			return 'Adiministrador'
-
-		case 'producer':
-			return 'Produtor'
-			
-		case 'affiliate':
-			return 'Afiliado'
-	
-		default:
-			return ''
-	}
-}
+import { useStore } from '@/hooks'
+import { useEffect, useState } from 'react'
+import { translateRole, formatCurrency, handleOutcomeNCommission } from '@/utils'
 
 export function SidePanel() {
-	const { setAffiliates } = useActions()
-	const { user, transactions = [], affiliates } = useStore()
+	const { user, transactions = [] } = useStore()
 	const [options, setOptions] = useState<any>([])
 	const [selectedOption, setSelectedOption] = useState<IOption>()
-	const [producers, setProducers] = useState<any>([])
+	const [producers, setProducers] = useState<Array<string>>([])
 	const [sellers, setSellers] = useState<any>([])
-	const [defaultValue, setDefaultValue] = useState<any>()
 
 	const [commission, setCommission] = useState('')
 	const [profit, setProfit] = useState('')
+	const [isUserProducer, setIsUserProducer] = useState(false)
+	const [isSelectedOptionProducer, setIsSelectedOptionProducer] = useState(false)
 
 	useEffect(() => {
-		setSelectedOption(user?.role === 'producer' ? { label: handleRole(user?.role), name: user.username } : { label: sellers[0], name: sellers[0] })
-	}, [user, sellers])
+		setIsUserProducer(producers?.includes(user?.username))
+	}, [user])
 
 	useEffect(() => {
-		setDefaultValue(user?.role === 'producer' ? { label: 'Produtor', name: selectedOption?.name } : selectedOption)
+		if (!!selectedOption)
+			setIsSelectedOptionProducer(producers?.includes(selectedOption.name))
 	}, [selectedOption])
+
+	useEffect(() => {
+		setSelectedOption(!isUserProducer ? { label: translateRole(user?.role), name: 'Todos' } : { label: sellers[0], name: sellers[0] })
+	}, [user, sellers])
 
 	useEffect(() => {
 		const affiliates = new Set<string>()
@@ -66,18 +55,11 @@ export function SidePanel() {
 
 	useEffect(() => {
 		if (transactions?.length) {
-			const outcome = transactions
-				?.filter(({ type }) => ['1', '2'].includes(type))
-				?.map(({ value }) => parseFloat(value))
-				?.reduce((prev, curr) => prev + curr)
+			const result = handleOutcomeNCommission({ transactions, user, type: 'load' })
+			const { outcome = 0, commission = 0 } = result
 
-			const commission = transactions
-				?.filter(({ type }) => type === (user?.role === 'affiliate' ? '4' : '3'))
-				?.map(({ value }) => parseFloat(value))
-				?.reduce((prev, curr) => prev + curr)
-				
-			setProfit(formatCurrency(String(user?.role === 'affiliate' ? commission : outcome - commission)))
-			setCommission(formatCurrency(String(user?.role === 'affiliate' ? outcome - commission : commission)))
+			setProfit(formatCurrency(user?.role === 'affiliate' ? commission : outcome - commission))
+			setCommission(formatCurrency(user?.role === 'affiliate' ? outcome - commission : commission))
 		}
 	}, [transactions])
 
@@ -85,31 +67,11 @@ export function SidePanel() {
 		setSelectedOption(option)
 
 		if (transactions?.length) {
-			const outcome = transactions
-				?.filter(({ seller, type, product }) => {
-					if (producers?.includes(option?.name)) {
-						const producer: any = transactions.find(({ seller, type }) => seller === option?.name && type === '1') || {}
+			const result = handleOutcomeNCommission({ transactions, option, producers, type: 'click' })
+			const { outcome = 0, commission = 0 } = result
 
-						return producer?.product === product && ['1', '2'].includes(type)
-					}
-					else 
-						return seller === option.name && type === '2'
-				})
-				?.map(({ value }) => parseFloat(value))
-				?.reduce((prev, curr) => prev + curr)
-
-			const commission = transactions
-				?.filter(({ seller, type }) => {
-					if (producers?.includes(option?.name))
-						return seller === option.name && type === '3'
-					else 
-						return seller === option.name && type === '4'
-				})
-				?.map(({ value }) => parseFloat(value))
-				?.reduce((prev, curr) => prev + curr)
-
-			setProfit(formatCurrency(String(option?.label !== 'Produtor' ? commission : outcome - commission)))
-			setCommission(formatCurrency(String(option?.label !== 'Produtor' ? outcome - commission : commission)))
+			setProfit(formatCurrency(option?.label !== 'Produtor' ? commission : outcome - commission))
+			setCommission(formatCurrency(option?.label !== 'Produtor' ? outcome - commission : commission))
 		}
 	}
 
@@ -118,7 +80,7 @@ export function SidePanel() {
 			{user?.role !== 'affiliate' && (
 				<>
 					<Upload />
-					<Select 
+					<Sellers 
 						options={options} 
 						onChange={handleSelectChange}
 						defaultValue={{ label: user?.role === 'producer' ? 'Produtor' : selectedOption?.name, name: selectedOption?.name }}
@@ -152,11 +114,11 @@ const Container = styled.div`
 	}
 `
 
-const Select = styled(CSelect).attrs<any>({
+const Sellers = styled(Select).attrs<any>({
 	listStyle: {
 		top: 68, 
 		padding: '21px 24px', 
-		borderRadius: 20, 
+		borderRadius: 20
 	}
 })<ISelectProps>`
 	background-color: #1D1D41;

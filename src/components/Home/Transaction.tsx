@@ -15,22 +15,28 @@ const options = [
 ]
 
 export function Transaction() {
-	const { user, toasts, transactionSearchTerm } = useStore()
-	const { fetchTransactions, setTransactionSearchTerm, setToasts } = useActions()
+	const { user: { username }, toasts, searchTerm } = useStore()
+	const { fetchTransactions, setSearchTerm, setToasts } = useActions()
 
 	function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
 		const { value = '' } = event?.target || {}
 
-		setTransactionSearchTerm(value)
+		setSearchTerm(value)
 	}
 
-	async function handleSelectChange(option: IOption) {
+	async function handleSelectChange({ name }: IOption) {
 		try {
-			await fetchTransactions({ orderByField: option?.name, username: user?.username })
+			await fetchTransactions({ username, orderByField: name })
 		} catch (error) {
 			console.log(error)
 
-      setToasts([...toasts, { type: 'error', content: (error as Error).message }])
+      setToasts([
+				...toasts, 
+				{
+					type: 'error', 
+					content: (error as Error).message
+				}
+			])
 		}
 	}
 
@@ -39,19 +45,8 @@ export function Transaction() {
 			<Header>
 				<Title children='Transações'/>
 				<Filters>
-					<Input
-						rightIcon={{ name: 'search' }} 
-						placeholder='Procurar por...' 
-						onChange={handleInputChange} 
-						value={transactionSearchTerm}
-					/>
-					<Select
-						style={{ background: 'none', border: '1px solid #8C89B4' }}
-						leftIcon={{ name: 'sort' }} 
-						options={options} 
-						placeholder='Filtrar por...'
-						onChange={handleSelectChange}
-					/>
+					<Search onChange={handleInputChange} value={searchTerm} />
+					<Sort onChange={handleSelectChange} />
 				</Filters>
 			</Header>
 
@@ -91,8 +86,6 @@ const Header = styled.div`
 `
 
 const Title = styled.span`
-	font-family: Inter;
-	font-style: normal;
 	font-weight: 600;
 	font-size: 20px;
 	line-height: 25px;
@@ -108,4 +101,18 @@ const Filters = styled.div`
 		width: 100%;
 		flex-direction: column;
 	}
+`
+
+const Search = styled(Input).attrs({
+	rightIcon: { name: 'search' },
+	placeholder: 'Procurar por...',
+})``
+
+const Sort = styled(Select).attrs({
+	leftIcon: { name: 'sort' }, 
+	options: options, 
+	placeholder: 'Filtrar por...', 
+})`
+	background: none;
+	border: 1px solid #8C89B4;
 `

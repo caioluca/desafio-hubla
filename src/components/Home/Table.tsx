@@ -3,14 +3,8 @@ import styled from 'styled-components'
 
 import { useStore } from '@/hooks'
 import { Icon } from '@/components'
-import { formatCurrency, formatDate } from '@/utils'
-import { ITransaction } from '@/types'
-
-interface IField {
-	name: 'type' | 'date' | 'product' | 'value' | 'seller'
-	label: 'Tipo' | 'Data' | 'Produto' | 'Valor' | 'Vendedor'
-	minWidth: number
-}
+import { filterTransactions } from '@/utils'
+import { ITransaction, IField } from '@/types'
 
 const fields: Array<IField> = [
 	{ name: 'type', label: 'Tipo', minWidth: 35 }, 
@@ -21,60 +15,49 @@ const fields: Array<IField> = [
 ]
 
 export function Table() {
-	const { user, transactions, transactionSearchTerm } = useStore()
+	const { transactions, searchTerm } = useStore()
 	const [parsedTransactions, setParsedTransactions] = useState<any>([])
 
 	useEffect(() => {
 		if (!!transactions.length) {
-			const newTransaction = transactions
-				.map(({ date, value, ...rest }) => {
-					return { ...rest, date: formatDate(date), value: formatCurrency(value) }
-				})
-				.filter((transaction) => {
-					const { type, date, product, value, seller } = transaction
-
-					const condition = 
-						type.match(RegExp(transactionSearchTerm, 'ig')) || 
-						date.match(RegExp(transactionSearchTerm, 'ig')) || 
-						product.match(RegExp(transactionSearchTerm, 'ig')) || 
-						value.match(RegExp(transactionSearchTerm, 'ig')) || 
-						seller.match(RegExp(transactionSearchTerm, 'ig'))
-
-					return condition
-				})
-
-			setParsedTransactions(newTransaction)
+			setParsedTransactions(filterTransactions({ transactions, searchTerm }))
 		}
-	}, [transactions, transactionSearchTerm])
+	}, [transactions, searchTerm])
 
 	return (
 		<Container>
 			<StyledTable>
 				<Head>
 					<Row>
+
 						{fields?.map((field, index) => (
 							<Header key={index} children={field.label} style={{ minWidth: field.minWidth }} />
 						))}
+
 					</Row>
 				</Head>
 				<Body>
 					{parsedTransactions.map((transaction: ITransaction, index: number) => (
 						<Row key={index}>
+
 							{fields?.map((field: IField, index: number) => (
 								<Data key={index}>
 									{transaction[field.name] as ReactNode}
 								</Data>
 							))}
+
 						</Row>
 					))}
 				</Body>
 			</StyledTable>
+
 			{!parsedTransactions?.length && (
 				<EmptyContainer>
 					<Icon name='empty' size={150} />
 					<EmptyLabel children='Não há nenhuma informação na tabela' />
 				</EmptyContainer>
 			)}
+			
 		</Container>
 	)
 }
@@ -98,10 +81,8 @@ const Body = styled.tbody``
 const Header = styled.th`
 	text-align: left;
 
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 400;
-	font-size: 12.1373px;
+	font-size: 14px;
 	line-height: 15px;
 
 	color: #AEABD8;
@@ -110,10 +91,8 @@ const Header = styled.th`
 `
 
 const Data = styled.td`
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 400;
-	font-size: 13.8711px;
+	font-size: 14px;
 	line-height: 17px;
 
 	color: #FFFFFF;
@@ -132,8 +111,6 @@ const EmptyContainer = styled.div`
 `
 
 const EmptyLabel = styled.span`
-	font-family: 'Inter';
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;

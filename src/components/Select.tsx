@@ -86,9 +86,6 @@ const LeftContent = styled.div`
 `
 
 const Label = styled.span<{ name?: string }>`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
   line-height: 20px;
   user-select: none;
@@ -112,8 +109,6 @@ const List = styled.ul`
 `
 
 const ListItem = styled.li`
-  font-family: 'Inter';
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 15px;

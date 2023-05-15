@@ -21,12 +21,8 @@ export function useActions() {
 		dispatch({ type: TYPES.SET_TOASTS, payload: toasts })
 	}
 
-	function setTransactionSearchTerm(searchTerm: string) {
+	function setSearchTerm(searchTerm: string) {
 		dispatch({ type: TYPES.SET_TRANSACTION_SEARCH_TERM, payload: searchTerm })
-	}
-
-	function setAffiliates(affiliates: Array<string>) {
-		dispatch({ type: TYPES.SET_AFFILIATES, payload: affiliates })
 	}
 
 	async function fetchTransactions({ username, orderByField }: any) {
@@ -155,8 +151,7 @@ export function useActions() {
 	}
 
 	return {
-		setAffiliates, 
-		setTransactionSearchTerm, 
+		setSearchTerm, 
 		setToasts, 
 		logout, 
 		login, 

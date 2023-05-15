@@ -61,8 +61,7 @@ const StyledInput = styled.input<IInputProps>`
 	border: none;
 	background: none;
 	outline: none;
-
-	font-family: 'Inter';
+	
 	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
@@ -70,9 +69,3 @@ const StyledInput = styled.input<IInputProps>`
 
 	color: #AEABD8;
 `
-
-const test = {
-	width: 10,
-	height: 10,
-	size: 10
-}

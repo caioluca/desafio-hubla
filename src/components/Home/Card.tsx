@@ -1,14 +1,7 @@
 import styled from 'styled-components'
 
 import { Icon } from '@/components'
-
-type TType = 'profit' | 'prejudice'
-
-interface ICardProps {
-	label: string
-	value: string
-	type: TType
-}
+import { ICardProps } from '@/types'
 
 export function Card({ label, value, type }: ICardProps) {
 	return (
@@ -38,8 +31,6 @@ const Info = styled.div`
 `
 
 const Label = styled.span`
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
 	line-height: 19px;
@@ -47,8 +38,6 @@ const Label = styled.span`
 `
 
 const Value = styled.span`
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 600;
 	font-size: 24px;
 	line-height: 29px;

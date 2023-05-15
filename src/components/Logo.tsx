@@ -48,8 +48,6 @@ const TextContainer = styled.div`
 `
 
 const UpperText = styled.span.attrs({ children: 'DESAFIO' })<{ size: TSize }>`
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 600;
 	${({ size }) => true ? `
 		font-size: 18px;
@@ -64,7 +62,6 @@ const UpperText = styled.span.attrs({ children: 'DESAFIO' })<{ size: TSize }>`
 `
 
 const BottomText = styled.span.attrs({ children: 'HUBLA' })<{ size: TSize }>`
-	font-family: 'Inter';
 	font-style: normal;
 	font-weight: 600;
 	${({ size }) => size === 'big' ? `

@@ -28,8 +28,6 @@ const Item = styled.li`
 `
 
 const ItemText = styled.span`
-	font-family: Inter;
-	font-style: normal;
 	font-weight: 600;
 	font-size: 16px;
 	line-height: 19px;

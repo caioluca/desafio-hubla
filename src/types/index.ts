@@ -1,5 +1,36 @@
 import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react'
 
+export interface IField {
+	name: 'type' | 'date' | 'product' | 'value' | 'seller'
+	label: 'Tipo' | 'Data' | 'Produto' | 'Valor' | 'Vendedor'
+	minWidth: number
+}
+export interface IHandleOutcomeNCommissionReturn {
+  outcome: number
+  commission: number
+}
+
+export interface ISumTransactionsValueParams {
+  transactions: Array<ITransaction>
+  filter: (transaction: ITransaction) => boolean
+}
+
+export interface IHandleOutcomeNComissionParams {
+	transactions: Array<ITransaction>
+	isProducer?: boolean
+	user?: IUserSession
+	option?: IOption
+	producers?: Array<string>
+	type: 'click' | 'load'
+}
+export interface ICardProps {
+	label: string
+	value: string
+	type: 'profit' | 'prejudice'
+}
+
+export type TTransactionType = '1' | '2' | '3' | '4'
+
 export type TIconsNames = (
 	'calendar' | 'down-arrow' | 'up-arrow' | 'profit' | 'prejudice' | 'logo' | 
 	'menu' | 'password' | 'role' | 'search' | 'upload' | 'user' | 'sort' | 
@@ -57,8 +88,8 @@ export interface IToast {
 
 export interface ITransaction {
 	type: '1' | '2' | '3' | '4'
-	date: Date
+	date: Date | string
 	product: string
-	value: string
+	value: string | number
 	seller: string
 }

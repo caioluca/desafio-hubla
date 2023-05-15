@@ -1,6 +1,120 @@
-import { ITransaction } from '@/types'
+import {
+  IHandleOutcomeNComissionParams, 
+  ITransaction, 
+  TTransactionType, 
+  ISumTransactionsValueParams, 
+  IHandleOutcomeNCommissionReturn
+} from '@/types'
 
-type TType = '1' | '2' | '3' | '4'
+function formatTransactionCB(transaction: ITransaction): ITransaction {
+  const { date, value, ...rest } = transaction
+
+  return {
+    ...rest, 
+    date: formatDate((date as Date)), 
+    value: formatCurrency(value), 
+  }
+}
+
+interface IFilterBySearchTermCBParams {
+  transaction: ITransaction
+  searchTerm: string
+}
+
+function filterBySearchTermCB(params: IFilterBySearchTermCBParams) {
+  const { transaction, searchTerm } = params
+  const { type, date, product, value, seller } = transaction
+  
+  return (
+    type.match(RegExp(searchTerm, 'ig')) || 
+    (date as string).match(RegExp(searchTerm, 'ig')) || 
+    product.match(RegExp(searchTerm, 'ig')) || 
+    (value as string).match(RegExp(searchTerm, 'ig')) || 
+    seller.match(RegExp(searchTerm, 'ig'))
+  )
+}
+
+interface IFilterTransactionsParams {
+  transactions: Array<ITransaction>
+  searchTerm: string
+}
+
+export function filterTransactions(params: IFilterTransactionsParams) {
+  const { transactions, searchTerm } = params
+
+  return (
+    transactions
+      ?.map(formatTransactionCB)
+      ?.filter((transaction) => filterBySearchTermCB({ transaction, searchTerm }))
+  )
+}
+
+export function translateRole(role?: string): string {
+	switch (role) {
+		case 'admin':
+			return 'Adiministrador'
+
+		case 'producer':
+			return 'Produtor'
+			
+		case 'affiliate':
+			return 'Afiliado'
+	
+		default:
+			return ''
+	}
+}
+
+function sumTransactionsValue(params: ISumTransactionsValueParams): number {
+  const { transactions, filter } = params
+
+  const values = transactions?.filter(filter)?.map(({ value }) => parseFloat(value as string))
+  if (!!values.length)  
+    return values?.reduce((prev, curr) => prev + curr)
+
+  return 0
+}
+
+export function handleOutcomeNCommission(params: IHandleOutcomeNComissionParams): IHandleOutcomeNCommissionReturn {
+  const { transactions, isProducer, type, producers, option } = params
+  let result = { outcome: 0, commission: 0 }
+
+    if (type === 'load') {
+      const outcome = sumTransactionsValue({ transactions, filter: ({ type }) => ['1', '2'].includes(type) })
+      const commission = sumTransactionsValue({ transactions, filter: ({ type }) => type === (!isProducer ? '4' : '3') })
+
+      result = { outcome, commission }
+    }
+
+    if (type === 'click' && !!option) {
+      const outcome = transactions
+        ?.filter(({ seller, type, product }) => {
+          if (producers?.includes(option?.name)) {
+            const producer: any = transactions.find(({ seller, type }) => seller === option?.name && type === '1') || {}
+
+            return producer?.product === product && ['1', '2'].includes(type)
+          }
+          else 
+            return seller === option.name && type === '2'
+        })
+        ?.map(({ value }) => parseFloat(value as string))
+        ?.reduce((prev, curr) => prev + curr)
+
+      const commission = sumTransactionsValue({
+        transactions, 
+        filter: ({ seller, type }) => {
+          if (producers?.includes(option?.name))
+            return seller === option.name && type === '3'
+          else 
+            return seller === option.name && type === '4'
+        }
+      })
+
+      result = { outcome, commission }
+    }
+
+  return result
+}
 
 export function parser(file: string): Array<ITransaction> {
 	const result = file.split(/\r?\n|\r|\n/g)
@@ -10,7 +124,7 @@ export function parser(file: string): Array<ITransaction> {
 
 	const parsedResult = result.map((row: string) => {
 		const parsedRow = {
-			type: row.slice(0, 0 + 1) as TType, 
+			type: row.slice(0, 0 + 1) as TTransactionType, 
 			date: new Date(row.slice(1, 1 + 25)), 
 			product: row.slice(26, 26 + 30), 
 			value: row.slice(56, 56 + 10), 
@@ -43,7 +157,7 @@ export function formatDate(inputDate: Date) {
   return `${dateStr} ${timeStr}`
 }
 
-export function formatCurrency(valueInCents: string) {
+export function formatCurrency(valueInCents: string | number) {
   const value = Number(valueInCents) / 100
 
   const currencyOptions = {

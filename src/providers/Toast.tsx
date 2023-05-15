@@ -76,8 +76,6 @@ const Toast = styled.div<{ type: 'success' | 'warning' | 'error' }>`
 	border-radius: 5px;
 
 	color: #fff;
-
-	font-family: 'Inter';
 	font-size: 16px;
 	font-weight: bold;
 	z-index: 999;

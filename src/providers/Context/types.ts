@@ -6,8 +6,7 @@ export interface IInitialState {
 	isMenuOpen: boolean
 	user: IUserSession
 	toasts: Array<IToast>
-	transactionSearchTerm: string
-	affiliates: Array<string>
+	searchTerm: string
 }
 
 export interface IContext extends IInitialState {

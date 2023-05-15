@@ -106,8 +106,6 @@ const Content: any = styled.div<{ file: IFileState }>`
 
 const Label = styled.span`
 	text-align: center;
-	font-family: 'Inter';
-	font-style: normal;
 	font-weight: 400;
 	font-size: 16px;
 	line-height: 19px;
