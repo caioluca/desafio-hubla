@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '@/components'
@@ -8,24 +8,26 @@ import { handleOutcomeNCommission, formatCurrency } from '@/utils'
 
 export function Card({ label, type }: ICardProps) {
 	const { selectedSeller, transactions, user, sellers } = useStore()
-	const [value, setValue] = useState<string>()
+	const [value, setValue] = useState<any>()
 	const [producers, setProducers] = useState<Array<string>>([])
-
-	useEffect(() => {
-		if (transactions?.length) {
-			const result = handleOutcomeNCommission({ transactions, user, type: 'load' })
-			const { outcome, commission } = result
-
-			if (type === 'prejudice') {
-				const newValue = user?.role === 'affiliate' ? commission : outcome - commission
-				setValue(formatCurrency(newValue))
-			}
-			else {
-				const newValue = user?.role === 'affiliate' ? outcome - commission : commission
-				setValue(formatCurrency(newValue))
-			}
+	
+	const defaultValue = useMemo(() => {
+		const result = handleOutcomeNCommission({ transactions, user, type: 'load' })
+		const { outcome, commission } = result
+		let value  
+		
+		if (type === 'profit') {
+			const newValue = user?.role === 'affiliate' ? commission : outcome - commission
+			value = newValue
 		}
-	}, [transactions])
+		else {
+			const newValue = user?.role === 'affiliate' ? outcome - commission : commission
+			value = newValue
+		}
+
+		return value
+	}, [transactions, user])
+	
 
 	useEffect(() => {
 		if (transactions?.length && !!selectedSeller) {
@@ -33,9 +35,9 @@ export function Card({ label, type }: ICardProps) {
 			const { outcome, commission } = result
 			
 			if (type === 'prejudice')
-				setValue(formatCurrency(commission))
+				setValue(commission)
 			else 
-				setValue(formatCurrency(outcome - commission))
+				setValue(outcome - commission)
 		}
 	}, [selectedSeller])
 
@@ -54,7 +56,7 @@ export function Card({ label, type }: ICardProps) {
 			<Icon name={type} size={45} />
 			<Info>
 				<Label children={label} />
-				<Value children={value} />
+				<Value children={formatCurrency(value || defaultValue)} />
 			</Info>
 		</Container>
 	)
