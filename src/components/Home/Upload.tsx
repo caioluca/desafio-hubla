@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { Icon } from '@/components'
 import { useActions } from '@/hooks'
+import { readFileAsText } from '@/utils'
 
 interface IFileState {
 	name: string
@@ -15,19 +16,13 @@ export function Upload() {
 
 	const { uploadTransactionsFile } = useActions()
 
-	function handleChange(event: ChangeEvent<HTMLInputElement>) {
+	async function handleChange(event: ChangeEvent<HTMLInputElement>) {
 		event.preventDefault()
 		event.stopPropagation()
 
-		const files = event.target.files as FileList
-    const fr = new FileReader() as FileReader
+		const file = await readFileAsText(event)
 
-    fr.readAsText(files[0])
-    fr.addEventListener('loadend', (event) => {
-			const fileContent = event.target?.result as string
-			
-			setFile({ name: files[0].name, content: fileContent })
-		})
+		setFile(file)
 	}
 
 	function handleClose() {

@@ -1,53 +1,11 @@
+import { ChangeEvent } from 'react'
 import {
-  IHandleOutcomeNComissionParams, 
-  ITransaction, 
-  TTransactionType, 
-  ISumTransactionsValueParams, 
-  IHandleOutcomeNCommissionReturn
+	ITransaction, 
+	ISumTransactionsValueParams, 
+	IHandleOutcomeNComissionParams, 
+	IHandleOutcomeNCommissionReturn, 
+	IFilterBySearchTermCBParams, 
 } from '@/types'
-
-function formatTransactionCB(transaction: ITransaction): ITransaction {
-  const { date, value, ...rest } = transaction
-
-  return {
-    ...rest, 
-    date: formatDate((date as Date)), 
-    value: formatCurrency(value), 
-  }
-}
-
-interface IFilterBySearchTermCBParams {
-  transaction: ITransaction
-  searchTerm: string
-}
-
-function filterBySearchTermCB(params: IFilterBySearchTermCBParams) {
-  const { transaction, searchTerm } = params
-  const { type, date, product, value, seller } = transaction
-  
-  return (
-    type.match(RegExp(searchTerm, 'ig')) || 
-    (date as string).match(RegExp(searchTerm, 'ig')) || 
-    product.match(RegExp(searchTerm, 'ig')) || 
-    (value as string).match(RegExp(searchTerm, 'ig')) || 
-    seller.match(RegExp(searchTerm, 'ig'))
-  )
-}
-
-interface IFilterTransactionsParams {
-  transactions: Array<ITransaction>
-  searchTerm: string
-}
-
-export function filterTransactions(params: IFilterTransactionsParams) {
-  const { transactions, searchTerm } = params
-
-  return (
-    transactions
-      ?.map(formatTransactionCB)
-      ?.filter((transaction) => filterBySearchTermCB({ transaction, searchTerm }))
-  )
-}
 
 export function translateRole(role?: string): string {
 	switch (role) {
@@ -63,6 +21,24 @@ export function translateRole(role?: string): string {
 		default:
 			return ''
 	}
+}
+
+export async function readFileAsText(event: ChangeEvent<HTMLInputElement>) {
+	const files = event.target.files as FileList
+	const fr = new FileReader() as FileReader
+
+	const file = new Promise<{ name: string, content: string }>((resolve) => {
+		fr.readAsText(files[0])
+		fr.addEventListener('loadend', (event) => {
+			
+			return resolve({
+				name: files[0]?.name, 
+				content: event.target?.result as string
+			})
+		})	
+	})
+
+	return await file
 }
 
 function sumTransactionsValue(params: ISumTransactionsValueParams): number {
@@ -86,7 +62,7 @@ export function handleOutcomeNCommission(params: IHandleOutcomeNComissionParams)
       result = { outcome, commission }
     }
 
-    if (type === 'click' && !!option) {
+    if (type === 'change' && !!option) {
       const outcome = sumTransactionsValue({ 
         transactions, 
         filter: ({ product, seller, type }) => {
@@ -116,27 +92,68 @@ export function handleOutcomeNCommission(params: IHandleOutcomeNComissionParams)
   return result
 }
 
-export function parser(file: string): Array<ITransaction> {
-	const result = file.split(/\r?\n|\r|\n/g)
+export function validateForm(newUser: any, formType: string ) {
+  if (!newUser?.username)
+   throw new Error('O Campo "Usuário" é obrigatório!')
 
-	if (!result[result.length - 1])
-		result.pop()
+  if (newUser?.username?.length < 3)
+    throw new Error('O Campo "Usuário" deve conter pelo menos 3 caracteres!')
 
-	const parsedResult = result.map((row: string) => {
-		const parsedRow = {
-			type: row.slice(0, 0 + 1) as TTransactionType, 
-			date: new Date(row.slice(1, 1 + 25)), 
-			product: row.slice(26, 26 + 30), 
-			value: row.slice(56, 56 + 10), 
-			seller: row.slice(66, 66 + 20), 
-		}
+  if (!newUser?.password)
+   throw new Error('O Campo "Senha" é obrigatório!')
 
-		return parsedRow
-	})
+  if (newUser?.password?.length < 8)
+    throw new Error('O Campo "Senha" deve conter pelo menos 8 caracteres!')
 
-	return parsedResult
+  if (formType === 'signup') {
+    if (!newUser?.role)
+      throw new Error('O Campo "Função" é obrigatório!')
+
+    if (!newUser?.confirmPassword)
+      throw new Error('O Campo "Confirmar Senha" é obrigatório!')
+
+    if (newUser?.confirmPassword !== newUser?.password)
+      throw new Error('O Campo "Confirmar Senha" deve ser igual ao campo "Senha"!')
+  }
 }
 
+function formatTransactionCB(transaction: ITransaction): ITransaction {
+  const { date, value, ...rest } = transaction
+
+  return {
+    ...rest, 
+    date: formatDate((date as Date)), 
+    value: formatCurrency(value), 
+  }
+}
+
+function filterBySearchTermCB(params: IFilterBySearchTermCBParams) {
+  const { transaction, searchTerm } = params
+  const { type, date, product, value, seller } = transaction
+  
+  return (
+    type.match(RegExp(searchTerm, 'ig')) || 
+    (date as string).match(RegExp(searchTerm, 'ig')) || 
+    product.match(RegExp(searchTerm, 'ig')) || 
+    (value as string).match(RegExp(searchTerm, 'ig')) || 
+    seller.match(RegExp(searchTerm, 'ig'))
+  )
+}
+
+interface IFilterTransactionsParams {
+  transactions: Array<ITransaction>
+  searchTerm: string
+}
+
+export function filterTransactions(params: IFilterTransactionsParams) {
+  const { transactions, searchTerm } = params
+
+  return (
+    transactions
+      ?.map(formatTransactionCB)
+      ?.filter((transaction) => filterBySearchTermCB({ transaction, searchTerm }))
+  )
+}
 
 export function formatDate(inputDate: Date) {
   const date = new Date(inputDate)
@@ -169,29 +186,4 @@ export function formatCurrency(valueInCents: string | number) {
   const currencyString = value.toLocaleString('pt-BR', currencyOptions)
 
   return currencyString
-}
-
-export function validateForm(newUser: any, formType: string ) {
-  if (!newUser?.username)
-   throw new Error('O Campo "Usuário" é obrigatório!')
-
-  if (newUser?.username?.length < 3)
-    throw new Error('O Campo "Usuário" deve conter pelo menos 3 caracteres!')
-
-  if (!newUser?.password)
-   throw new Error('O Campo "Senha" é obrigatório!')
-
-  if (newUser?.password?.length < 8)
-    throw new Error('O Campo "Senha" deve conter pelo menos 8 caracteres!')
-
-  if (formType === 'signup') {
-    if (!newUser?.role)
-      throw new Error('O Campo "Função" é obrigatório!')
-
-    if (!newUser?.confirmPassword)
-      throw new Error('O Campo "Confirmar Senha" é obrigatório!')
-
-    if (newUser?.confirmPassword !== newUser?.password)
-      throw new Error('O Campo "Confirmar Senha" deve ser igual ao campo "Senha"!')
-  }
 }

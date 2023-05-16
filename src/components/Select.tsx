@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '@/components'
 
 import { ISelectProps, IOption } from '@/types'
-
 
 export function Select(props: ISelectProps) {
 	const {
@@ -16,7 +15,6 @@ export function Select(props: ISelectProps) {
     listItemStyle, 
     children, 
     onChange,
-    defaultValue, 
     ...rest
   } = props
 

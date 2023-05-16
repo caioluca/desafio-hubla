@@ -1,9 +1,54 @@
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Icon } from '@/components'
 import { ICardProps } from '@/types'
+import { useStore } from '@/hooks'
+import { handleOutcomeNCommission, formatCurrency } from '@/utils'
 
-export function Card({ label, value, type }: ICardProps) {
+export function Card({ label, type }: ICardProps) {
+	const { selectedSeller, transactions, user, sellers } = useStore()
+	const [value, setValue] = useState<string>()
+	const [producers, setProducers] = useState<Array<string>>([])
+
+	useEffect(() => {
+		if (transactions?.length) {
+			const result = handleOutcomeNCommission({ transactions, user, type: 'load' })
+			const { outcome, commission } = result
+
+			if (type === 'prejudice') {
+				const newValue = user?.role === 'affiliate' ? commission : outcome - commission
+				setValue(formatCurrency(newValue))
+			}
+			else {
+				const newValue = user?.role === 'affiliate' ? outcome - commission : commission
+				setValue(formatCurrency(newValue))
+			}
+		}
+	}, [transactions])
+
+	useEffect(() => {
+		if (transactions?.length && !!selectedSeller) {
+			const result = handleOutcomeNCommission({ transactions, option: selectedSeller, producers, type: 'change' })
+			const { outcome, commission } = result
+			
+			if (type === 'prejudice')
+				setValue(formatCurrency(commission))
+			else 
+				setValue(formatCurrency(outcome - commission))
+		}
+	}, [selectedSeller])
+
+	useEffect(() => {
+		const unrepeatedProducers = new Set<string>()
+		
+		transactions
+			?.filter(({ type }) => type === '1')
+			?.map(({ seller }) => unrepeatedProducers.add(seller))
+
+		setProducers(Array.from(unrepeatedProducers))
+	}, [sellers])
+
 	return (
 		<Container>
 			<Icon name={type} size={45} />

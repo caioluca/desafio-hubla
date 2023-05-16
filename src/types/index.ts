@@ -1,5 +1,9 @@
 import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react'
 
+export interface IFilterBySearchTermCBParams {
+  transaction: ITransaction
+  searchTerm: string
+}
 export interface IField {
 	name: 'type' | 'date' | 'product' | 'value' | 'seller'
 	label: 'Tipo' | 'Data' | 'Produto' | 'Valor' | 'Vendedor'
@@ -21,11 +25,10 @@ export interface IHandleOutcomeNComissionParams {
 	user?: IUserSession
 	option?: IOption
 	producers?: Array<string>
-	type: 'click' | 'load'
+	type: 'change' | 'load'
 }
 export interface ICardProps {
 	label: string
-	value: string
 	type: 'profit' | 'prejudice'
 }
 
@@ -50,7 +53,7 @@ export interface IOption {
 	label: string
 }
 
-export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange' | 'defaultValue'> {
+export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'onChange'> {
   placeholder?: string
 	leftIcon?: IIcon
 	rightIcon?: IIcon
@@ -58,7 +61,6 @@ export interface ISelectProps extends Omit<DetailedHTMLProps<HTMLAttributes<HTML
   listStyle?: CSSProperties
   listItemStyle?: CSSProperties
 	children?: ReactNode
-	defaultValue?: IOption
 	onChange?: (option: IOption) => any
 }
 

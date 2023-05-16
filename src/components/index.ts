@@ -15,3 +15,7 @@ export { Transaction } from './Home/Transaction'
 export { SidePanel } from './Home/SidePanel'
 export { Card } from './Home/Card'
 export { Upload } from './Home/Upload'
+export { Sellers } from './Home/Sellers'
+
+export { Login } from './Auth/Login'
+export { Signup } from './Auth/Signup'

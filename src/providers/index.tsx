@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { ContextProvider } from './Context'
 import { ToastProvider } from './Toast'
 import { FontsProvider } from './Fonts'
-import { ThemeProvider } from './Theme'
 import { Global } from '@/styles'
 
 interface IProvidersProps {
@@ -19,14 +18,12 @@ export function Providers({ children }: IProvidersProps) {
 			</Head>
 			
 			<ContextProvider>
-				<ThemeProvider>
 					<FontsProvider>
 						<ToastProvider>
 							<Global />
 							{children}
 						</ToastProvider>
 					</FontsProvider>
-				</ThemeProvider>
 			</ContextProvider>
 		</>
 	)

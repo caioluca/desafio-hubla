@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 import { Select as CSelect } from '@/components'
 import { useActions, useStore } from '@/hooks'
+import { translateRole } from '@/utils'
 
 const options = [
 	{ label: 'Sair', name: 'logout' },
@@ -21,27 +22,11 @@ export function Profile() {
 		}
 	}
 
-	function handleRole(role?: string) {
-		switch (role) {
-			case 'admin':
-				return 'Adiministrador'
-
-			case 'producer':
-				return 'Produtor'
-
-			case 'affiliate':
-				return 'Afiliado'
-		
-			default:
-				return ''
-		}
-	}
-
 	return (
 		<Select options={options} onChange={handleChange}>
 			<Info>
 				<Username children={user?.username?.toUpperCase()} />
-				<Role children={handleRole(user?.role)} />
+				<Role children={translateRole(user?.role)} />
 			</Info>
 		</Select>
 	)
