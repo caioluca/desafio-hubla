@@ -15,12 +15,9 @@ export function SidePanel() {
 				</>
 			)}
 			
-			{(!!transactions?.length) && (
-				<>
-					<Card label='Comissão do(s) Afiliado(s)' type='prejudice' />
-					<Card label='Comissão do(s) Produtore(s)' type='profit' />
-				</>
-			)}
+			<Card label='Comissão do(s) Afiliado(s)' type='prejudice' />
+			
+			<Card label='Comissão do(s) Produtore(s)' type='profit' />
 		</Container>
 	)
 }
