@@ -1,38 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Desafio Hubla
 
-## Getting Started
+This is dash board where users can analyse a list of transactions.
 
-First, run the development server:
+<table>
+<tr>
+<td>
+
+![phone-preview](./assets/phone.png)
+
+</td>
+
+<td>
+
+![tablet-preview](./assets/tablet.png)
+
+</td>
+
+<td>
+
+![tablet-x-preview](./assets/tablet-x.png)
+
+</td>
+</tr>
+</table>
+
+<center>
+
+![desktop-preview](./assets/desktop.png)
+
+</center>
+
+[Figma Layout](https://www.figma.com/file/i0diXnZ5d6FSCKiQjgdtzf/Untitled?type=design&t=7kmLfKgWKRn914ii-1)
+
+[Layout Reference](https://www.figma.com/file/ojNagH7l12m5HS62ChmFw7/Dashboard-Finance-Bank-Fintech-(Community)?type=design&t=7kmLfKgWKRn914ii-1)
+
+Techs used:
+- [Next.js](https://nextjs.org/)
+- [Reactjs - Context api for state management](https://react.dev/reference/react/useContext)
+- [Styled-components for styling](https://styled-components.com/)
+- [Prisma as ORM](https://www.prisma.io/)
+- [SQLite as the database](https://sqlite.org/index.html)
+- [Next.js - Api Routes for API](https://nextjs.org/docs/pages/building-your-application/routing/api-routes)
+- [Iron-Session for authorization](https://github.com/vvo/iron-session)
+
+## Running locally
+So you can run this project locally in your machine you have two options:
+
+#### Standard
+clone the project, then:
 
 ```bash
+cd desafio-programacao-fullstack-1.2.0
+
+npm i
+
 npm run dev
-# or
+```
+or, if you prefer Yarn:
+```bash
+yarn
+
 yarn dev
+```
+#### Docker
+clone the project, then:
+
+```bash
+cd desafio-programacao-fullstack-1.2.0
+
+docker compose up # if you are using docker compose plugin
 # or
-pnpm dev
+docker-compose up # if you are using standalone docker compose
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![terminal-tutorial-gif](./assets/terminal.gif)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+After that all you need is to open your web browser and run: [http://localhost:3000](http://localhost:3000) and thats it.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<center>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+![web-tutorial-gif](./assets/web.gif)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+</center>
 
-## Learn More
+## Insomnia Collection
 
-To learn more about Next.js, take a look at the following resources:
+If you wish to run API requests by insomnia download this [File (insomnia-docs.json)](./insomnia-docs.json) and import it to your insomnia.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+<table>
+<tr>
+<td>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![insomnia-step-1](./assets/insomnia-step-1.png)
 
-## Deploy on Vercel
+</td>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<td>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![insomnia-step-2](./assets/insomnia-step-2.png)
+
+</td>
+</tr>
+</table>
