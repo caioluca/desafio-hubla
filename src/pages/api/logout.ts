@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withIronSessionApiRoute } from 'iron-session/next'
+
 import { sessionOptions } from '@/lib'
 import { IUserSession } from '@/types'
+import { logout } from '@/controllers'
 
-async function handler(req: NextApiRequest, res: NextApiResponse<IUserSession>) {
-	req.session.destroy()
-
-	res.status(200).json({ role: '', username: '', isLoggedIn: false })
+function handler(req: NextApiRequest, res: NextApiResponse<IUserSession>) {
+	logout(req, res)
 }
 
 export default withIronSessionApiRoute(handler, sessionOptions)
