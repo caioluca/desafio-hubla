@@ -7,12 +7,28 @@ export const initialState: IInitialState = {
 	user: { isLoggedIn: false, role: '', username: '' }, 
 	toasts: [],
 	searchTerm: '',
+	form: {},
+	page: 'login',
+	sellers: [],
+	selectedSeller: undefined
 }
 
 export function reducer(state: IInitialState, action: IAction) {
 	const { type, payload } = action
 
 	switch (type) {
+		case TYPES.SET_SELECTED_SELLER: 
+			return { ...state, selectedSeller: payload }
+
+		case TYPES.SET_SELLERS: 
+			return { ...state, sellers: payload }
+
+		case TYPES.SET_FORM: 
+			return { ...state, form: payload }
+
+		case TYPES.SET_PAGE: 
+			return { ...state, page: payload }
+
 		case TYPES.SET_TRANSACTION_SEARCH_TERM: 
 			return { ...state, searchTerm: payload }
 

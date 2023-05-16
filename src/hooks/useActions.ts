@@ -1,6 +1,6 @@
 import { TYPES } from '@/providers/Context'
 import { useStore } from '@/hooks'
-import { IUserLogin, INewUser, IUserSession } from '@/types'
+import { IUserLogin, INewUser, IUserSession, IOption } from '@/types'
 import { validateForm } from '@/utils'
 import { useRouter } from 'next/router'
 import { IToast } from '@/types'
@@ -23,6 +23,22 @@ export function useActions() {
 
 	function setSearchTerm(searchTerm: string) {
 		dispatch({ type: TYPES.SET_TRANSACTION_SEARCH_TERM, payload: searchTerm })
+	}
+
+	function setForm(form: { [key: string]: string }) {
+		dispatch({ type: TYPES.SET_FORM, payload: form })
+	}
+
+	function setPage(page: 'login' | 'signup') {
+		dispatch({ type: TYPES.SET_PAGE, payload: page })
+	}
+
+	function setSellers(sellers: Array<IOption | {}>) {
+		dispatch({ type: TYPES.SET_SELLERS, payload: sellers })
+	}
+	
+	function setSelectedSeller(seller: IOption) {
+		dispatch({ type: TYPES.SET_SELECTED_SELLER, payload: seller })
 	}
 
 	async function fetchTransactions({ username, orderByField }: any) {
@@ -79,7 +95,7 @@ export function useActions() {
 		}
 	}
 
-	async function registerUser(newUser: INewUser) {
+	async function signup(newUser: INewUser) {
 		try {
 			validateForm(newUser, 'register')
 
@@ -101,6 +117,8 @@ export function useActions() {
 
 			setToasts([...toasts, { type: 'success', content: 'Usuário adicionado com sucesso!' }])
 
+			setForm({})
+			setPage('login')
 		} catch (error) {
 			throw error
 		}
@@ -151,11 +169,15 @@ export function useActions() {
 	}
 
 	return {
+		setSellers, 
+		setSelectedSeller, 
+		setForm, 
+		setPage, 
 		setSearchTerm, 
 		setToasts, 
 		logout, 
 		login, 
-		registerUser, 
+		signup, 
 		setUser, 
 		toggleIsMenuOpen, 
 		fetchTransactions, 
