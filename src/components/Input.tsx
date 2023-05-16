@@ -68,4 +68,8 @@ const StyledInput = styled.input<IInputProps>`
 	line-height: 20px;
 
 	color: #AEABD8;
+
+	&::placeholder {
+		color: #706e98;
+	}
 `
